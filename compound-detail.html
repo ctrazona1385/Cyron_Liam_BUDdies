@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B.U.D. Tracker — Compound Detail</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav>
+  <span class="brand">B.U.D. Tracker</span>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="create-compound.html">New Compound</a>
+  <a href="inventory.html">Inventory</a>
+  <a href="admin-approval.html" class="admin-only" id="nav-admin">Approvals</a>
+  <span class="nav-user" id="nav-user-name"></span>
+  <button class="btn-logout" onclick="logout()">Logout</button>
+</nav>
+
+<div class="page">
+
+  <!-- Back link -->
+  <a href="inventory.html" style="font-size:.85rem; color:var(--muted);">← Back to Inventory</a>
+  <br /><br />
+
+  <!-- ── Header row ── -->
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+    <div>
+      <h1 class="page-title" style="margin-bottom:.25rem;" id="detail-name">Hydrocortisone Cream 1%</h1>
+      <span class="badge badge-success" id="detail-status">Approved</span>
+      &nbsp;
+      <span class="badge badge-info" id="detail-type">Non-Sterile</span>
+    </div>
+    <!-- Admin actions -->
+    <div style="display:flex; gap:.75rem;" id="admin-actions">
+      <button class="btn btn-warn btn-sm" onclick="openBudOverride()">Adjust B.U.D.</button>
+      <button class="btn btn-danger btn-sm" onclick="removeFromInventory()">Remove from Inventory</button>
+    </div>
+  </div>
+
+  <!-- ── Info grid ── -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
+
+    <div class="card">
+      <h3 style="margin-bottom:.9rem; color:var(--primary-dk); font-size:1rem;">Compound Details</h3>
+      <table style="font-size:.9rem;">
+        <tbody>
+          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0; white-space:nowrap;">Compound ID</td><td id="d-id">#C-001</td></tr>
+          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Strength</td><td id="d-strength">1%</td></tr>
+          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Lot Number</td><td id="d-lot">LOT-20260301</td></tr>
+          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Quantity</td><td id="d-qty">60 g</td></tr>
+          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Date Compounded</td><td id="d-date">2026-03-01</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:.9rem; color:var(--primary-dk); font-size:1rem;">Beyond-Use Date</h3>
+      <div style="font-size:2rem; font-weight:700; color:var(--accent);" id="d-bud">2026-09-01</div>
+      <div style="font-size:.85rem; color:var(--muted); margin-top:.3rem;" id="d-bud-days">182 days remaining</div>
+      <div style="margin-top:.75rem;">
+        <div class="risk-bar-wrap">
+          <div style="font-size:.75rem; color:var(--muted); margin-bottom:.25rem;">Time remaining until B.U.D.</div>
+          <div class="risk-bar-track">
+            <div class="risk-bar-fill" id="d-bud-bar" style="width:80%;"></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:.75rem; font-size:.82rem; color:var(--muted);" id="d-bud-override-note"></div>
+    </div>
+
+  </div>
+
+  <!-- ── Ingredients table ── -->
+  <div class="card">
+    <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Ingredients</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Drug Name</th>
+            <th>Strength</th>
+            <th>Supplier Lot #</th>
+            <th>Expiration</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="ingredients-body">
+          <!-- Sample rows -->
+          <tr>
+            <td>Hydrocortisone Powder USP</td>
+            <td>100%</td>
+            <td>SUP-20260101</td>
+            <td>2027-01-01</td>
+            <td><span class="badge badge-success">Active</span></td>
+          </tr>
+          <tr>
+            <td>Cetyl Alcohol NF</td>
+            <td>—</td>
+            <td>SUP-20251201</td>
+            <td>2027-06-01</td>
+            <td><span class="badge badge-success">Active</span></td>
+          </tr>
+          <tr>
+            <td>White Petrolatum USP</td>
+            <td>—</td>
+            <td>SUP-20260115</td>
+            <td>2026-05-01</td>
+            <td><span class="badge badge-warn">Expiring Soon</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Admin action log ── -->
+  <div class="card" id="action-log-section">
+    <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Admin Action Log</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Admin</th>
+            <th>Action</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="action-log-body">
+          <tr>
+            <td>2026-03-02</td>
+            <td>C. Trazona</td>
+            <td><span class="badge badge-success">Approved</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Notes ── -->
+  <div class="card">
+    <h3 style="margin-bottom:.6rem; color:var(--primary-dk); font-size:1rem;">Notes</h3>
+    <p id="d-notes" style="font-size:.9rem; color:var(--muted);">No special notes recorded.</p>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ── B.U.D. Override Modal ── -->
+<div id="bud-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
+  <div class="card" style="width:100%; max-width:420px; margin:0 1rem;">
+    <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Adjust B.U.D.</h3>
+    <div class="form-group">
+      <label for="new-bud">New Beyond-Use Date</label>
+      <input type="date" id="new-bud" />
+    </div>
+    <div class="form-group">
+      <label for="bud-override-reason">Reason for Override <span style="color:var(--danger)">*</span></label>
+      <textarea id="bud-override-reason" rows="2" placeholder="Justify the B.U.D. change…"></textarea>
+    </div>
+    <div style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:.5rem;">
+      <button class="btn btn-outline" onclick="closeBudOverride()">Cancel</button>
+      <button class="btn btn-warn"    onclick="saveBudOverride()">Save Override</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  // TODO: parse ?id= from URL, fetch compound data from API, populate fields
+  // const params  = new URLSearchParams(window.location.search);
+  // const compId  = params.get('id');
+  // fetch(`/api/compounds/${compId}`).then(...)
+
+  // ── B.U.D. bar calculation ──
+  function calcBudBar(dateMade, budDate) {
+    const total   = new Date(budDate) - new Date(dateMade);
+    const elapsed = Date.now()        - new Date(dateMade);
+    const pct     = Math.max(0, Math.min(100, 100 - (elapsed / total * 100)));
+    const bar     = document.getElementById('d-bud-bar');
+    bar.style.width = pct + '%';
+    bar.className = 'risk-bar-fill' + (pct < 25 ? ' high' : pct < 50 ? ' medium' : '');
+    const days    = Math.ceil((new Date(budDate) - Date.now()) / 86400000);
+    document.getElementById('d-bud-days').textContent =
+      days > 0 ? `${days} days remaining` : 'EXPIRED';
+  }
+  calcBudBar('2026-03-01', '2026-09-01');
+
+  // ── Remove from inventory ──
+  function removeFromInventory() {
+    if (!confirm('Remove this compound from inventory? This action cannot be undone.')) return;
+    // TODO: DELETE /api/compounds/:id  then redirect
+    alert('Removed from inventory. (placeholder — backend not connected)');
+    window.location.href = 'inventory.html';
+  }
+
+  // ── B.U.D. override modal ──
+  function openBudOverride() {
+    document.getElementById('bud-modal').style.display = 'flex';
+  }
+  function closeBudOverride() {
+    document.getElementById('bud-modal').style.display = 'none';
+  }
+  function saveBudOverride() {
+    const newBud = document.getElementById('new-bud').value;
+    const reason = document.getElementById('bud-override-reason').value.trim();
+    if (!newBud || !reason) { alert('Please fill in all fields.'); return; }
+    // TODO: PATCH /api/compounds/:id/bud  { bud: newBud, reason }
+    document.getElementById('d-bud').textContent = newBud;
+    document.getElementById('d-bud-override-note').textContent = `Override by admin — ${reason}`;
+    closeBudOverride();
+  }
+</script>
+
+</body>
+</html>

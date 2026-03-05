@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B.U.D. Tracker — Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="login-wrapper">
+  <div class="login-box">
+
+    <div class="logo">
+      <h1>B.U.D. Tracker</h1>
+      <p>Compounding Pharmacy Management</p>
+    </div>
+
+    <!-- Tab toggle: Login / Register -->
+    <div class="tab-toggle">
+      <button id="tab-login"    class="active" onclick="showTab('login')">Login</button>
+      <button id="tab-register"              onclick="showTab('register')">Register</button>
+    </div>
+
+    <!-- Error / success banner -->
+    <div id="auth-alert" style="display:none;" class="alert alert-danger"></div>
+
+    <!-- ── Login Form ── -->
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="you@pharmacy.com" required />
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+        Sign In
+      </button>
+    </form>
+
+    <!-- ── Register Form ── -->
+    <form id="register-form" style="display:none;" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label for="reg-name">Full Name</label>
+        <input type="text" id="reg-name" placeholder="Jane Doe" required />
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" placeholder="you@pharmacy.com" required />
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" placeholder="Min. 8 characters" minlength="8" required />
+      </div>
+      <div class="form-group">
+        <label for="reg-role">Role</label>
+        <select id="reg-role" required>
+          <option value="">— Select Role —</option>
+          <option value="technician">Technician</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+        Create Account
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  function showTab(tab) {
+    document.getElementById('login-form').style.display    = tab === 'login'    ? '' : 'none';
+    document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
+    document.getElementById('tab-login').classList.toggle('active',    tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+    hideAlert();
+  }
+
+  function showAlert(msg, type = 'danger') {
+    const el = document.getElementById('auth-alert');
+    el.textContent = msg;
+    el.className = `alert alert-${type}`;
+    el.style.display = '';
+  }
+  function hideAlert() { document.getElementById('auth-alert').style.display = 'none'; }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    // TODO: replace with real API call
+    // POST /api/auth/login  { email, password }
+    // On success: store user in sessionStorage, redirect to dashboard
+    console.log('Login attempt:', { email });
+    showAlert('Backend not connected yet. (placeholder)', 'warn');
+  }
+
+  function handleRegister(e) {
+    e.preventDefault();
+    const name     = document.getElementById('reg-name').value.trim();
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const role     = document.getElementById('reg-role').value;
+
+    // TODO: replace with real API call
+    // POST /api/auth/register  { name, email, password, role }
+    // On success: show success message, switch to login tab
+    console.log('Register attempt:', { name, email, role });
+    showAlert('Account created! (placeholder — backend not connected)', 'success');
+  }
+</script>
+
+</body>
+</html>

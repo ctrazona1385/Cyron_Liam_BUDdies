@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B.U.D. Tracker — Inventory</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav>
+  <span class="brand">B.U.D. Tracker</span>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="create-compound.html">New Compound</a>
+  <a href="inventory.html" class="active">Inventory</a>
+  <a href="admin-approval.html" class="admin-only" id="nav-admin">Approvals</a>
+  <span class="nav-user" id="nav-user-name"></span>
+  <button class="btn-logout" onclick="logout()">Logout</button>
+</nav>
+
+<div class="page">
+
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+    <h1 class="page-title" style="margin:0;">Inventory Log</h1>
+    <a href="create-compound.html" class="btn btn-primary">+ New Compound</a>
+  </div>
+
+  <!-- ── Search / Filter bar ── -->
+  <div class="search-bar">
+    <input  type="text"   id="search-name"       placeholder="Search by compound name…"  oninput="applyFilters()" />
+    <input  type="text"   id="search-lot"         placeholder="Search by lot number…"     oninput="applyFilters()" />
+    <input  type="date"   id="filter-exp-from"    title="Expiration from"                 onchange="applyFilters()" />
+    <input  type="date"   id="filter-exp-to"      title="Expiration to"                   onchange="applyFilters()" />
+    <select id="filter-type"   onchange="applyFilters()">
+      <option value="">All Types</option>
+      <option value="sterile">Sterile</option>
+      <option value="non-sterile">Non-Sterile</option>
+      <option value="hazardous">Hazardous</option>
+    </select>
+    <select id="filter-status" onchange="applyFilters()">
+      <option value="">All Statuses</option>
+      <option value="approved">Approved</option>
+      <option value="pending">Pending</option>
+      <option value="expired">Expired</option>
+      <option value="rejected">Rejected</option>
+    </select>
+  </div>
+
+  <!-- Expiration warnings -->
+  <div class="alert alert-warn" id="exp-warning" style="display:none;">
+    ⚠ <strong id="exp-warning-count"></strong> compound(s) are expiring within 30 days.
+  </div>
+
+  <!-- ── Table ── -->
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Compound Name</th>
+            <th>Lot #</th>
+            <th>Type</th>
+            <th>Qty</th>
+            <th>B.U.D.</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="inventory-body">
+
+          <!-- Sample rows — replace with dynamic data -->
+          <tr data-name="hydrocortisone cream 1%" data-lot="lot-20260301" data-type="non-sterile" data-status="approved" data-exp="2026-09-01">
+            <td><a href="compound-detail.html?id=1"><strong>Hydrocortisone Cream 1%</strong></a></td>
+            <td>LOT-20260301</td>
+            <td>Non-Sterile</td>
+            <td>60 g</td>
+            <td>2026-09-01</td>
+            <td><span class="badge badge-success">Approved</span></td>
+            <td>
+              <a href="compound-detail.html?id=1" class="btn btn-outline btn-sm">Details</a>
+              <button class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button>
+            </td>
+          </tr>
+
+          <tr data-name="clonidine 0.1mg capsules" data-lot="lot-20260220" data-type="non-sterile" data-status="approved" data-exp="2026-08-20">
+            <td><a href="compound-detail.html?id=2"><strong>Clonidine 0.1mg Capsules</strong></a></td>
+            <td>LOT-20260220</td>
+            <td>Non-Sterile</td>
+            <td>120 caps</td>
+            <td>2026-08-20</td>
+            <td><span class="badge badge-success">Approved</span></td>
+            <td>
+              <a href="compound-detail.html?id=2" class="btn btn-outline btn-sm">Details</a>
+              <button class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button>
+            </td>
+          </tr>
+
+          <tr data-name="vancomycin 25mg/ml injection" data-lot="lot-20260215" data-type="sterile" data-status="rejected" data-exp="2026-03-17">
+            <td><a href="compound-detail.html?id=3"><strong>Vancomycin 25mg/mL Injection</strong></a></td>
+            <td>LOT-20260215</td>
+            <td>Sterile</td>
+            <td>10 mL</td>
+            <td>2026-03-17</td>
+            <td><span class="badge badge-danger">Rejected</span></td>
+            <td>
+              <a href="compound-detail.html?id=3" class="btn btn-outline btn-sm">Details</a>
+            </td>
+          </tr>
+
+          <tr data-name="testosterone cypionate 200mg/ml" data-lot="lot-20260101" data-type="sterile" data-status="pending" data-exp="2026-04-01">
+            <td><a href="compound-detail.html?id=4"><strong>Testosterone Cypionate 200mg/mL</strong></a></td>
+            <td>LOT-20260101</td>
+            <td>Sterile</td>
+            <td>20 mL</td>
+            <td>2026-04-01</td>
+            <td><span class="badge badge-pending">Pending</span></td>
+            <td>
+              <a href="compound-detail.html?id=4" class="btn btn-outline btn-sm">Details</a>
+            </td>
+          </tr>
+
+          <tr data-name="ketamine 50mg/ml nasal" data-lot="lot-20260210" data-type="hazardous" data-status="approved" data-exp="2026-03-10">
+            <td><a href="compound-detail.html?id=5"><strong>Ketamine 50mg/mL Nasal</strong></a></td>
+            <td>LOT-20260210</td>
+            <td>Hazardous</td>
+            <td>5 mL</td>
+            <td style="color:var(--danger); font-weight:600;">2026-03-10</td>
+            <td><span class="badge badge-danger">Expired</span></td>
+            <td>
+              <a href="compound-detail.html?id=5" class="btn btn-outline btn-sm">Details</a>
+              <button class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p id="no-results" style="display:none; color:var(--muted); font-size:.9rem; margin-top:.75rem;">No compounds match the current filter.</p>
+
+  <!-- ── Export row ── -->
+  <div style="display:flex; gap:.75rem; margin-top:1rem; flex-wrap:wrap;">
+    <button class="btn btn-outline btn-sm" onclick="exportCSV()">Export CSV</button>
+    <button class="btn btn-outline btn-sm" onclick="window.print()">Print Report</button>
+  </div>
+
+</div><!-- /page -->
+
+<script src="script.js"></script>
+<script>
+  // ── Filter logic ──
+  function applyFilters() {
+    const name      = document.getElementById('search-name').value.toLowerCase();
+    const lot       = document.getElementById('search-lot').value.toLowerCase();
+    const type      = document.getElementById('filter-type').value;
+    const status    = document.getElementById('filter-status').value;
+    const expFrom   = document.getElementById('filter-exp-from').value;
+    const expTo     = document.getElementById('filter-exp-to').value;
+    const rows      = document.querySelectorAll('#inventory-body tr');
+    let visible     = 0;
+    let expiringSoon = 0;
+    const today     = new Date();
+    const soon      = new Date(); soon.setDate(today.getDate() + 30);
+
+    rows.forEach(row => {
+      const rName   = row.dataset.name   || '';
+      const rLot    = row.dataset.lot    || '';
+      const rType   = row.dataset.type   || '';
+      const rStatus = row.dataset.status || '';
+      const rExp    = row.dataset.exp    ? new Date(row.dataset.exp) : null;
+
+      const ok =
+        (!name    || rName.includes(name))   &&
+        (!lot     || rLot.includes(lot))     &&
+        (!type    || rType === type)          &&
+        (!status  || rStatus === status)      &&
+        (!expFrom || (rExp && rExp >= new Date(expFrom))) &&
+        (!expTo   || (rExp && rExp <= new Date(expTo)));
+
+      row.style.display = ok ? '' : 'none';
+      if (ok) {
+        visible++;
+        if (rExp && rExp > today && rExp <= soon) expiringSoon++;
+      }
+    });
+
+    document.getElementById('no-results').style.display = visible ? 'none' : '';
+    const warn = document.getElementById('exp-warning');
+    if (expiringSoon) {
+      document.getElementById('exp-warning-count').textContent = expiringSoon;
+      warn.style.display = '';
+    } else {
+      warn.style.display = 'none';
+    }
+  }
+
+  // Run on load to set expiration warning
+  applyFilters();
+
+  // ── Remove item ──
+  function removeItem(btn) {
+    if (!confirm('Remove this compound from inventory?')) return;
+    // TODO: DELETE /api/compounds/:id
+    btn.closest('tr').remove();
+    applyFilters();
+  }
+
+  // ── CSV export ──
+  function exportCSV() {
+    const rows    = [...document.querySelectorAll('#inventory-body tr')]
+      .filter(r => r.style.display !== 'none');
+    const headers = ['Compound Name', 'Lot #', 'Type', 'Qty', 'B.U.D.', 'Status'];
+    const lines   = [headers.join(',')];
+    rows.forEach(row => {
+      const cells = [...row.querySelectorAll('td')].slice(0, 6).map(td => `"${td.textContent.trim()}"`);
+      lines.push(cells.join(','));
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = `bud_inventory_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+</script>
+
+</body>
+</html>
