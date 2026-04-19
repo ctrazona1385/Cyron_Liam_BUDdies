@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>B.U.D. Tracker — Dashboard</title>
+  <title>B.U.D.DIES. — Dashboard</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <!-- ── Navbar ── -->
 <nav>
-  <span class="brand">B.U.D. Tracker</span>
+  <span class="brand">B.U.D.DIES.</span>
   <a href="dashboard.html" class="active">Dashboard</a>
   <a href="create-compound.html">New Compound</a>
   <a href="inventory.html">Inventory</a>
@@ -30,46 +30,33 @@
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-label">Total Compounds</div>
-      <div class="stat-value" id="stat-total">5</div>
+      <div class="stat-value" id="stat-total">—</div>
       <div class="stat-sub">In inventory</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Approved</div>
-      <div class="stat-value" style="color:var(--accent);" id="stat-approved">3</div>
+      <div class="stat-value" style="color:var(--accent);" id="stat-approved">—</div>
       <div class="stat-sub">Active in inventory</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Pending Approval</div>
-      <div class="stat-value" style="color:var(--warn);" id="stat-pending">1</div>
+      <div class="stat-value" style="color:var(--warn);" id="stat-pending">—</div>
       <div class="stat-sub">Awaiting admin review</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Expiring ≤ 30 Days</div>
-      <div class="stat-value" style="color:var(--danger);" id="stat-expiring">2</div>
+      <div class="stat-label">Expiring ≤ 5 Days</div>
+      <div class="stat-value" style="color:var(--danger);" id="stat-expiring">—</div>
       <div class="stat-sub">Requires attention</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Expired</div>
-      <div class="stat-value" style="color:var(--danger);" id="stat-expired">1</div>
+      <div class="stat-value" style="color:var(--danger);" id="stat-expired">—</div>
       <div class="stat-sub">Remove from inventory</div>
     </div>
   </div>
 
   <!-- ── Alerts ── -->
-  <div id="dash-alerts">
-    <div class="alert alert-danger">
-      <strong>1 compound has expired</strong> and should be removed from inventory.
-      <a href="inventory.html?filter=expired" style="margin-left:.5rem;">View →</a>
-    </div>
-    <div class="alert alert-warn">
-      <strong>2 compounds</strong> are expiring within the next 30 days.
-      <a href="inventory.html?filter=expiring" style="margin-left:.5rem;">View →</a>
-    </div>
-    <div class="alert alert-warn" id="pending-alert">
-      <strong>1 compound</strong> is pending admin approval.
-      <a href="admin-approval.html" style="margin-left:.5rem;" id="pending-link">Review →</a>
-    </div>
-  </div>
+  <div id="dash-alerts"></div>
 
   <!-- ── Smart Expiration Risk Dashboard (Unique Feature) ── -->
   <div class="card" style="margin-top:1.5rem;">
@@ -78,94 +65,10 @@
       <span style="font-size:.8rem; color:var(--muted);">Sorted by urgency</span>
     </div>
 
+    <input type="text" id="risk-search" placeholder="Search compounds…" oninput="filterRisk()"
+      style="width:100%; padding:.55rem .85rem; border:1px solid var(--border); border-radius:2px;
+             font-size:.9rem; background:#fff; margin-bottom:.75rem;" />
     <div id="risk-list">
-
-      <!-- Risk rows — each shows compound name, days left, qty, and a risk bar -->
-      <!-- High risk -->
-      <div class="risk-row" style="padding:.75rem 0; border-bottom:1px solid var(--border);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.35rem; flex-wrap:wrap; gap:.5rem;">
-          <div>
-            <a href="compound-detail.html?id=5"><strong>Ketamine 50mg/mL Nasal</strong></a>
-            <span class="badge badge-danger" style="margin-left:.5rem;">Expired</span>
-          </div>
-          <div style="font-size:.82rem; color:var(--muted);">Qty: 5 mL &nbsp;·&nbsp; Lot: LOT-20260210</div>
-        </div>
-        <div class="risk-bar-wrap">
-          <div style="display:flex; justify-content:space-between; font-size:.75rem; color:var(--muted); margin-bottom:.2rem;">
-            <span>B.U.D. 2026-03-10</span><span style="color:var(--danger); font-weight:700;">EXPIRED</span>
-          </div>
-          <div class="risk-bar-track"><div class="risk-bar-fill high" style="width:100%;"></div></div>
-        </div>
-      </div>
-
-      <!-- Medium risk -->
-      <div class="risk-row" style="padding:.75rem 0; border-bottom:1px solid var(--border);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.35rem; flex-wrap:wrap; gap:.5rem;">
-          <div>
-            <a href="compound-detail.html?id=3"><strong>Vancomycin 25mg/mL Injection</strong></a>
-            <span class="badge badge-warn" style="margin-left:.5rem;">14 days</span>
-          </div>
-          <div style="font-size:.82rem; color:var(--muted);">Qty: 10 mL &nbsp;·&nbsp; Lot: LOT-20260215</div>
-        </div>
-        <div class="risk-bar-wrap">
-          <div style="display:flex; justify-content:space-between; font-size:.75rem; color:var(--muted); margin-bottom:.2rem;">
-            <span>B.U.D. 2026-03-17</span><span style="color:var(--warn); font-weight:600;">14 days remaining</span>
-          </div>
-          <div class="risk-bar-track"><div class="risk-bar-fill medium" style="width:15%;"></div></div>
-        </div>
-      </div>
-
-      <!-- Medium risk -->
-      <div class="risk-row" style="padding:.75rem 0; border-bottom:1px solid var(--border);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.35rem; flex-wrap:wrap; gap:.5rem;">
-          <div>
-            <a href="compound-detail.html?id=4"><strong>Testosterone Cypionate 200mg/mL</strong></a>
-            <span class="badge badge-warn" style="margin-left:.5rem;">29 days</span>
-          </div>
-          <div style="font-size:.82rem; color:var(--muted);">Qty: 20 mL &nbsp;·&nbsp; Lot: LOT-20260101</div>
-        </div>
-        <div class="risk-bar-wrap">
-          <div style="display:flex; justify-content:space-between; font-size:.75rem; color:var(--muted); margin-bottom:.2rem;">
-            <span>B.U.D. 2026-04-01</span><span style="color:var(--warn); font-weight:600;">29 days remaining</span>
-          </div>
-          <div class="risk-bar-track"><div class="risk-bar-fill medium" style="width:20%;"></div></div>
-        </div>
-      </div>
-
-      <!-- Low risk -->
-      <div class="risk-row" style="padding:.75rem 0; border-bottom:1px solid var(--border);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.35rem; flex-wrap:wrap; gap:.5rem;">
-          <div>
-            <a href="compound-detail.html?id=2"><strong>Clonidine 0.1mg Capsules</strong></a>
-            <span class="badge badge-info" style="margin-left:.5rem;">170 days</span>
-          </div>
-          <div style="font-size:.82rem; color:var(--muted);">Qty: 120 caps &nbsp;·&nbsp; Lot: LOT-20260220</div>
-        </div>
-        <div class="risk-bar-wrap">
-          <div style="display:flex; justify-content:space-between; font-size:.75rem; color:var(--muted); margin-bottom:.2rem;">
-            <span>B.U.D. 2026-08-20</span><span>170 days remaining</span>
-          </div>
-          <div class="risk-bar-track"><div class="risk-bar-fill" style="width:68%;"></div></div>
-        </div>
-      </div>
-
-      <!-- Low risk -->
-      <div class="risk-row" style="padding:.75rem 0;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.35rem; flex-wrap:wrap; gap:.5rem;">
-          <div>
-            <a href="compound-detail.html?id=1"><strong>Hydrocortisone Cream 1%</strong></a>
-            <span class="badge badge-info" style="margin-left:.5rem;">182 days</span>
-          </div>
-          <div style="font-size:.82rem; color:var(--muted);">Qty: 60 g &nbsp;·&nbsp; Lot: LOT-20260301</div>
-        </div>
-        <div class="risk-bar-wrap">
-          <div style="display:flex; justify-content:space-between; font-size:.75rem; color:var(--muted); margin-bottom:.2rem;">
-            <span>B.U.D. 2026-09-01</span><span>182 days remaining</span>
-          </div>
-          <div class="risk-bar-track"><div class="risk-bar-fill" style="width:82%;"></div></div>
-        </div>
-      </div>
-
     </div><!-- /risk-list -->
   </div>
 
@@ -173,40 +76,18 @@
   <div class="card" style="margin-top:1.25rem;">
     <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Recent Activity</h3>
     <div class="table-wrap">
-      <table>
+      <table id="recent-activity-table">
         <thead>
           <tr>
             <th>Date</th>
             <th>User</th>
             <th>Action</th>
             <th>Compound</th>
+            <th>Form</th>
+            <th>Detail</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>2026-03-03</td>
-            <td>J. Smith</td>
-            <td><span class="badge badge-info">Created</span></td>
-            <td><a href="compound-detail.html?id=1">Hydrocortisone Cream 1%</a></td>
-          </tr>
-          <tr>
-            <td>2026-03-02</td>
-            <td>C. Trazona</td>
-            <td><span class="badge badge-success">Approved</span></td>
-            <td><a href="compound-detail.html?id=1">Hydrocortisone Cream 1%</a></td>
-          </tr>
-          <tr>
-            <td>2026-02-28</td>
-            <td>C. Trazona</td>
-            <td><span class="badge badge-danger">Rejected</span></td>
-            <td><a href="compound-detail.html?id=3">Vancomycin 25mg/mL Injection</a></td>
-          </tr>
-          <tr>
-            <td>2026-02-20</td>
-            <td>A. Lee</td>
-            <td><span class="badge badge-info">Created</span></td>
-            <td><a href="compound-detail.html?id=2">Clonidine 0.1mg Capsules</a></td>
-          </tr>
+        <tbody id="activity-body">
         </tbody>
       </table>
     </div>
@@ -216,12 +97,93 @@
 
 <script src="script.js"></script>
 <script>
-  // Set today's date in header
   document.getElementById('dash-date').textContent =
     new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-  // TODO: fetch real stats from /api/dashboard and populate stat cards + risk list
-  // TODO: hide pending-alert and nav-admin if user is not admin
+  function doseFormLabel(unit) {
+    return { caps: 'Capsules', tabs: 'Tablets', mL: 'Liquid', g: 'Cream/Topical', units: 'Units' }[unit] || unit;
+  }
+
+  function actionBadgeClass(action) {
+    return { approved: 'badge-success', rejected: 'badge-danger', created: 'badge-info',
+             adjusted_bud: 'badge-warn', removed: 'badge-danger' }[action] || 'badge-info';
+  }
+
+  async function loadDashboard() {
+    try {
+      const { stats, risk_list, recent_activity } = await apiFetch('/dashboard');
+
+      document.getElementById('stat-total').textContent    = stats.total;
+      document.getElementById('stat-approved').textContent = stats.approved;
+      document.getElementById('stat-pending').textContent  = stats.pending;
+      document.getElementById('stat-expiring').textContent = stats.expiring_soon;
+      document.getElementById('stat-expired').textContent  = stats.expired;
+
+      const alerts = document.getElementById('dash-alerts');
+      alerts.innerHTML = '';
+      if (+stats.expired > 0) alerts.innerHTML +=
+        `<div class="alert alert-danger"><strong>${stats.expired} compound(s) expired</strong> and should be removed. <a href="inventory.html">View →</a></div>`;
+      if (+stats.expiring_soon > 0) alerts.innerHTML +=
+        `<div class="alert alert-warn"><strong>${stats.expiring_soon} compound(s)</strong> expiring within 5 days. <a href="inventory.html">View →</a></div>`;
+      if (+stats.pending > 0 && getCurrentUser().role === 'admin') alerts.innerHTML +=
+        `<div class="alert alert-warn"><strong>${stats.pending} compound(s)</strong> pending approval. <a href="admin-approval.html">Review →</a></div>`;
+
+      const riskList = document.getElementById('risk-list');
+      riskList.innerHTML = '';
+      risk_list.forEach((c, i) => {
+        const days    = daysUntil(c.bud);
+        const expired = days < 0;
+        const isLast  = i === risk_list.length - 1;
+        const badgeClass = expired ? 'badge-danger' : days <= 5 ? 'badge-warn' : 'badge-info';
+        const pct = expired ? 100 : Math.max(5, Math.min(100, 100 - (days / 180 * 100)));
+        const fillClass = expired ? 'high' : days <= 5 ? 'medium' : '';
+        riskList.innerHTML += `
+          <div class="risk-row" data-name="${(c.name + ' ' + c.strength).toLowerCase()}" style="padding:.75rem 0;${isLast ? '' : 'border-bottom:1px solid var(--border);'}">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem;flex-wrap:wrap;gap:.5rem;">
+              <div>
+                <a href="compound-detail.html?id=${c.id}"><strong>${c.name} ${c.strength}</strong></a>
+                <span class="badge ${badgeClass}" style="margin-left:.5rem;">${expired ? 'Expired' : days + ' days'}</span>
+              </div>
+              <div style="font-size:.82rem;color:var(--muted);">Qty: ${Math.floor(c.quantity)} ${c.unit} &nbsp;·&nbsp; Lot: ${c.lot_number}</div>
+            </div>
+            <div class="risk-bar-wrap">
+              <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-bottom:.2rem;">
+                <span>B.U.D. ${formatDate(c.bud)}</span>
+                <span ${expired ? 'style="color:var(--danger);font-weight:700;"' : days <= 30 ? 'style="color:var(--warn);font-weight:600;"' : ''}>
+                  ${expired ? 'EXPIRED' : days <= 5 ? days + ' days remaining' : days + ' days remaining'}
+                </span>
+              </div>
+              <div class="risk-bar-track"><div class="risk-bar-fill ${fillClass}" style="width:${pct}%;"></div></div>
+            </div>
+          </div>`;
+      });
+
+      const activityBody = document.getElementById('activity-body');
+      activityBody.innerHTML = '';
+      recent_activity.forEach(a => {
+        activityBody.innerHTML += `
+          <tr>
+            <td>${a.created_at.slice(0,10)}</td>
+            <td>${a.user_name}</td>
+            <td><span class="badge ${actionBadgeClass(a.action)}">${capitalize(a.action)}</span></td>
+            <td><a href="compound-detail.html?id=${a.compound_id}">${a.compound_name} ${a.compound_strength || ''}</a></td>
+            <td>${doseFormLabel(a.compound_unit)}</td>
+            <td>${a.notes || '—'}</td>
+          </tr>`;
+      });
+    } catch (err) {
+      console.error('Failed to load dashboard:', err);
+    }
+  }
+
+  function filterRisk() {
+    const q = document.getElementById('risk-search').value.toLowerCase();
+    document.querySelectorAll('#risk-list .risk-row').forEach(row => {
+      row.style.display = (!q || (row.dataset.name || '').includes(q)) ? '' : 'none';
+    });
+  }
+
+  loadDashboard();
 </script>
 
 </body>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>B.U.D. Tracker — Login</title>
+  <title>B.U.D.DIES. — Login</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,7 +12,7 @@
   <div class="login-box">
 
     <div class="logo">
-      <h1>B.U.D. Tracker</h1>
+      <h1>B.U.D.DIES.</h1>
       <p>Compounding Pharmacy Management</p>
     </div>
 
@@ -88,30 +88,40 @@
   }
   function hideAlert() { document.getElementById('auth-alert').style.display = 'none'; }
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
+    hideAlert();
     const email    = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
-
-    // TODO: replace with real API call
-    // POST /api/auth/login  { email, password }
-    // On success: store user in sessionStorage, redirect to dashboard
-    console.log('Login attempt:', { email });
-    showAlert('Backend not connected yet. (placeholder)', 'warn');
+    try {
+      const user = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+      sessionStorage.setItem('bud_user', JSON.stringify(user));
+      window.location.replace('dashboard.html');
+    } catch (err) {
+      showAlert(err.message);
+    }
   }
 
-  function handleRegister(e) {
+  async function handleRegister(e) {
     e.preventDefault();
+    hideAlert();
     const name     = document.getElementById('reg-name').value.trim();
     const email    = document.getElementById('reg-email').value.trim();
     const password = document.getElementById('reg-password').value;
     const role     = document.getElementById('reg-role').value;
-
-    // TODO: replace with real API call
-    // POST /api/auth/register  { name, email, password, role }
-    // On success: show success message, switch to login tab
-    console.log('Register attempt:', { name, email, role });
-    showAlert('Account created! (placeholder — backend not connected)', 'success');
+    try {
+      await apiFetch('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password, role }),
+      });
+      showAlert('Account created! You can now log in.', 'success');
+      showTab('login');
+    } catch (err) {
+      showAlert(err.message);
+    }
   }
 </script>
 

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>B.U.D. Tracker — Admin Approval</title>
+  <title>B.U.D.DIES. — Admin Approval</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <!-- ── Navbar ── -->
 <nav>
-  <span class="brand">B.U.D. Tracker</span>
+  <span class="brand">B.U.D.DIES.</span>
   <a href="dashboard.html">Dashboard</a>
   <a href="create-compound.html">New Compound</a>
   <a href="inventory.html">Inventory</a>
@@ -31,7 +31,7 @@
 
     <!-- Filter bar -->
     <div class="search-bar">
-      <select id="filter-status" onchange="filterQueue()">
+      <select id="filter-status" onchange="loadQueue()">
         <option value="pending">Pending</option>
         <option value="approved">Approved</option>
         <option value="rejected">Rejected</option>
@@ -42,78 +42,6 @@
 
     <!-- Approval cards -->
     <div id="approval-list">
-
-      <!-- ── Sample pending card (will be replaced by dynamic data) ── -->
-      <div class="card" data-status="pending" data-name="Hydrocortisone Cream 1%">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:.75rem;">
-          <div>
-            <div style="display:flex; align-items:center; gap:.75rem; margin-bottom:.4rem;">
-              <strong style="font-size:1.05rem;">Hydrocortisone Cream 1%</strong>
-              <span class="badge badge-pending">Pending</span>
-            </div>
-            <div style="font-size:.85rem; color:var(--muted);">
-              Submitted by <strong>J. Smith (Technician)</strong> &nbsp;·&nbsp; 2026-03-01
-              &nbsp;·&nbsp; Lot: LOT-20260301
-            </div>
-            <div style="font-size:.85rem; margin-top:.4rem;">
-              B.U.D.: <strong>2026-09-01</strong> &nbsp;|&nbsp; Type: Non-Sterile &nbsp;|&nbsp; Qty: 60 g
-            </div>
-          </div>
-          <div style="display:flex; gap:.6rem; flex-wrap:wrap;">
-            <a href="compound-detail.html?id=1" class="btn btn-outline btn-sm">View Details</a>
-            <button class="btn btn-success btn-sm" onclick="approveCompound(this, 1)">Approve</button>
-            <button class="btn btn-danger  btn-sm" onclick="openRejectModal(1)">Reject</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── Sample approved card ── -->
-      <div class="card" data-status="approved" data-name="Clonidine 0.1mg Capsules">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:.75rem;">
-          <div>
-            <div style="display:flex; align-items:center; gap:.75rem; margin-bottom:.4rem;">
-              <strong style="font-size:1.05rem;">Clonidine 0.1mg Capsules</strong>
-              <span class="badge badge-success">Approved</span>
-            </div>
-            <div style="font-size:.85rem; color:var(--muted);">
-              Submitted by <strong>A. Lee (Technician)</strong> &nbsp;·&nbsp; 2026-02-20
-              &nbsp;·&nbsp; Lot: LOT-20260220
-            </div>
-            <div style="font-size:.85rem; margin-top:.4rem;">
-              B.U.D.: <strong>2026-08-20</strong> &nbsp;|&nbsp; Type: Non-Sterile &nbsp;|&nbsp; Qty: 120 caps
-            </div>
-          </div>
-          <div style="display:flex; gap:.6rem;">
-            <a href="compound-detail.html?id=2" class="btn btn-outline btn-sm">View Details</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── Sample rejected card ── -->
-      <div class="card" data-status="rejected" data-name="Vancomycin 25mg/mL Injection">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:.75rem;">
-          <div>
-            <div style="display:flex; align-items:center; gap:.75rem; margin-bottom:.4rem;">
-              <strong style="font-size:1.05rem;">Vancomycin 25mg/mL Injection</strong>
-              <span class="badge badge-danger">Rejected</span>
-            </div>
-            <div style="font-size:.85rem; color:var(--muted);">
-              Submitted by <strong>J. Smith (Technician)</strong> &nbsp;·&nbsp; 2026-02-15
-              &nbsp;·&nbsp; Lot: LOT-20260215
-            </div>
-            <div style="font-size:.85rem; margin-top:.4rem;">
-              B.U.D.: <strong>2026-03-17</strong> &nbsp;|&nbsp; Type: Sterile &nbsp;|&nbsp; Qty: 10 mL
-            </div>
-            <div class="alert alert-danger" style="margin-top:.6rem; padding:.5rem .8rem; font-size:.83rem;">
-              <strong>Rejection Note:</strong> Missing sterility test documentation.
-            </div>
-          </div>
-          <div style="display:flex; gap:.6rem;">
-            <a href="compound-detail.html?id=3" class="btn btn-outline btn-sm">View Details</a>
-          </div>
-        </div>
-      </div>
-
     </div><!-- /approval-list -->
 
     <p id="no-results" style="display:none; color:var(--muted); font-size:.9rem;">No compounds match the current filter.</p>
@@ -140,32 +68,78 @@
 <script>
   let rejectTargetId = null;
 
-  // TODO: check role from sessionStorage; if not admin hide content and show access-denied
-  // const user = JSON.parse(sessionStorage.getItem('bud_user') || '{}');
-  // if (user.role !== 'admin') { ... }
+  // Role guard
+  const _currentUser = getCurrentUser();
+  if (_currentUser && _currentUser.role !== 'admin') {
+    document.getElementById('access-denied').style.display = '';
+    document.getElementById('admin-content').style.display = 'none';
+  }
+
+  function statusBadgeClass(status) {
+    return { approved: 'badge-success', pending: 'badge-pending', rejected: 'badge-danger' }[status] || '';
+  }
+
+  async function loadQueue() {
+    const statusFilter = document.getElementById('filter-status').value;
+    const list = document.getElementById('approval-list');
+    list.innerHTML = '';
+    try {
+      const compounds = await apiFetch(`/compounds${statusFilter ? '?status=' + statusFilter : ''}`);
+      compounds.forEach(c => {
+        const isPending = c.status === 'pending';
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.status = c.status;
+        card.dataset.name   = `${c.name} ${c.strength}`;
+        card.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.75rem;">
+            <div>
+              <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem;">
+                <strong style="font-size:1.05rem;">${c.name} ${c.strength}</strong>
+                <span class="badge ${statusBadgeClass(c.status)}">${capitalize(c.status)}</span>
+              </div>
+              <div style="font-size:.85rem;color:var(--muted);">
+                Submitted by <strong>${c.created_by_name}</strong> &nbsp;·&nbsp; ${c.created_at.slice(0,10)}
+                &nbsp;·&nbsp; Lot: ${c.lot_number}
+              </div>
+              <div style="font-size:.85rem;margin-top:.4rem;">
+                B.U.D.: <strong>${formatDate(c.bud)}</strong> &nbsp;|&nbsp; Type: ${capitalize(c.type)} &nbsp;|&nbsp; Qty: ${Math.floor(c.quantity)} ${c.unit}
+              </div>
+              ${c.rejection_note ? `<div class="alert alert-danger" style="margin-top:.6rem;padding:.5rem .8rem;font-size:.83rem;"><strong>Rejection Note:</strong> ${c.rejection_note}</div>` : ''}
+            </div>
+            <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+              <a href="compound-detail.html?id=${c.id}" class="btn btn-outline btn-sm">View Details</a>
+              ${isPending ? `<button class="btn btn-success btn-sm" onclick="approveCompound(this,${c.id})">Approve</button>
+              <button class="btn btn-danger btn-sm" onclick="openRejectModal(${c.id})">Reject</button>` : ''}
+            </div>
+          </div>`;
+        list.appendChild(card);
+      });
+      filterQueue();
+    } catch (err) {
+      console.error('Failed to load queue:', err);
+    }
+  }
 
   function filterQueue() {
-    const status = document.getElementById('filter-status').value.toLowerCase();
     const search = document.getElementById('filter-search').value.toLowerCase();
     const cards  = document.querySelectorAll('#approval-list .card');
     let visible  = 0;
     cards.forEach(card => {
-      const matchStatus = !status || card.dataset.status === status;
       const matchSearch = !search || card.dataset.name.toLowerCase().includes(search);
-      card.style.display = (matchStatus && matchSearch) ? '' : 'none';
-      if (matchStatus && matchSearch) visible++;
+      card.style.display = matchSearch ? '' : 'none';
+      if (matchSearch) visible++;
     });
     document.getElementById('no-results').style.display = visible ? 'none' : '';
   }
 
-  function approveCompound(btn, id) {
-    // TODO: PATCH /api/compounds/:id/approve
-    const card = btn.closest('.card');
-    card.querySelector('.badge').className = 'badge badge-success';
-    card.querySelector('.badge').textContent = 'Approved';
-    card.dataset.status = 'approved';
-    btn.closest('div').innerHTML = `<a href="compound-detail.html?id=${id}" class="btn btn-outline btn-sm">View Details</a>`;
-    console.log('Approved compound', id);
+  async function approveCompound(btn, id) {
+    try {
+      await apiFetch(`/compounds/${id}/approve`, { method: 'PATCH' });
+      loadQueue();
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
   function openRejectModal(id) {
@@ -179,15 +153,22 @@
     rejectTargetId = null;
   }
 
-  function confirmReject() {
+  async function confirmReject() {
     const note = document.getElementById('reject-note').value.trim();
     if (!note) { alert('Please enter a rejection note.'); return; }
-    // TODO: PATCH /api/compounds/:id/reject  { note }
-    console.log('Rejected compound', rejectTargetId, 'Note:', note);
-    closeRejectModal();
-    // Refresh page or update DOM in real implementation
-    alert('Compound rejected. (placeholder — backend not connected)');
+    try {
+      await apiFetch(`/compounds/${rejectTargetId}/reject`, {
+        method: 'PATCH',
+        body: JSON.stringify({ note }),
+      });
+      closeRejectModal();
+      loadQueue();
+    } catch (err) {
+      alert(err.message);
+    }
   }
+
+  loadQueue();
 </script>
 
 </body>

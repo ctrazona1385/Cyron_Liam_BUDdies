@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>B.U.D. Tracker — Create Compound</title>
+  <title>B.U.D.DIES. — Create Compound</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <!-- ── Navbar ── -->
 <nav>
-  <span class="brand">B.U.D. Tracker</span>
+  <span class="brand">B.U.D.DIES.</span>
   <a href="dashboard.html">Dashboard</a>
   <a href="create-compound.html" class="active">New Compound</a>
   <a href="inventory.html">Inventory</a>
@@ -40,10 +40,6 @@
           <input type="text" id="comp-strength" placeholder="e.g. 1%" required />
         </div>
         <div class="form-group">
-          <label for="comp-lot">Lot Number</label>
-          <input type="text" id="comp-lot" placeholder="e.g. LOT-20260101" required />
-        </div>
-        <div class="form-group">
           <label for="comp-qty">Quantity Made</label>
           <input type="number" id="comp-qty" placeholder="e.g. 30" min="1" required />
         </div>
@@ -58,7 +54,7 @@
             <option value="units">Units</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group span-2">
           <label for="comp-type">Compound Type</label>
           <select id="comp-type" required>
             <option value="">— Select —</option>
@@ -66,10 +62,6 @@
             <option value="non-sterile">Non-Sterile</option>
             <option value="hazardous">Hazardous</option>
           </select>
-        </div>
-        <div class="form-group span-2">
-          <label for="comp-notes">Notes / Instructions</label>
-          <textarea id="comp-notes" rows="3" placeholder="Special handling, storage conditions, etc."></textarea>
         </div>
       </div>
 
@@ -80,16 +72,16 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="comp-date-made">Date Compounded</label>
-          <input type="date" id="comp-date-made" required />
+          <input type="date" id="comp-date-made" readonly style="background:#ede8df;" required />
         </div>
         <div class="form-group">
           <label for="comp-bud">Calculated B.U.D. <span style="font-weight:400;color:var(--muted)">(auto-filled)</span></label>
-          <input type="date" id="comp-bud" readonly style="background:#f5f8fb;" />
+          <input type="date" id="comp-bud" readonly />
         </div>
         <div class="form-group span-2">
           <label>
             <input type="checkbox" id="bud-override" onchange="toggleBudOverride()" />
-            &nbsp;Admin override — manually set B.U.D.
+            &nbsp;Override B.U.D. — manually set date &amp; expiration
           </label>
         </div>
         <div class="form-group" id="bud-manual-wrap" style="display:none;">
@@ -101,18 +93,6 @@
           <input type="text" id="bud-reason" placeholder="Reason for manual override" />
         </div>
       </div>
-
-      <!-- ── Ingredients ── -->
-      <hr style="border:none; border-top:1px solid var(--border); margin:1.25rem 0;" />
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
-        <h3 style="color:var(--primary-dk);">Ingredients (Drugs)</h3>
-        <button type="button" class="btn btn-outline btn-sm" onclick="addIngredient()">+ Add Ingredient</button>
-      </div>
-
-      <div id="ingredients-list">
-        <!-- Ingredient rows injected here -->
-      </div>
-      <p id="no-ingredients" style="color:var(--muted); font-size:.9rem;">No ingredients added yet.</p>
 
       <!-- ── Submit ── -->
       <hr style="border:none; border-top:1px solid var(--border); margin:1.25rem 0;" />
@@ -127,9 +107,8 @@
 
 <script src="script.js"></script>
 <script>
-  // ── B.U.D. auto-calculation ──
-  // USP <797> simplified defaults (days): non-sterile=180, sterile=30, hazardous=14
-  const BUD_DEFAULTS = { sterile: 30, 'non-sterile': 180, hazardous: 14 };
+  // Sterile=60 days, Non-Sterile=30 days, Hazardous=7 days
+  const BUD_DEFAULTS = { sterile: 60, 'non-sterile': 30, hazardous: 7 };
 
   document.getElementById('comp-date-made').addEventListener('change', recalcBud);
   document.getElementById('comp-type').addEventListener('change', recalcBud);
@@ -146,57 +125,37 @@
 
   function toggleBudOverride() {
     const on = document.getElementById('bud-override').checked;
+    const dateInput = document.getElementById('comp-date-made');
+    dateInput.readOnly = !on;
+    dateInput.style.background = on ? '#fff' : '#ede8df';
     document.getElementById('bud-manual-wrap').style.display = on ? '' : 'none';
     document.getElementById('bud-reason-wrap').style.display = on ? '' : 'none';
+    if (!on) { dateInput.valueAsDate = new Date(); recalcBud(); }
   }
 
-  // ── Ingredients ──
-  let ingredientCount = 0;
-
-  function addIngredient() {
-    document.getElementById('no-ingredients').style.display = 'none';
-    ingredientCount++;
-    const row = document.createElement('div');
-    row.className = 'form-grid card';
-    row.id = `ingredient-${ingredientCount}`;
-    row.style.marginBottom = '.75rem';
-    row.innerHTML = `
-      <div class="form-group">
-        <label>Drug Name</label>
-        <input type="text" name="ing-drug-name" placeholder="e.g. Hydrocortisone" required />
-      </div>
-      <div class="form-group">
-        <label>Strength / Concentration</label>
-        <input type="text" name="ing-strength" placeholder="e.g. 100mg/mL" />
-      </div>
-      <div class="form-group">
-        <label>Lot #</label>
-        <input type="text" name="ing-lot" placeholder="Supplier lot number" />
-      </div>
-      <div class="form-group">
-        <label>Expiration Date</label>
-        <input type="date" name="ing-expiration" />
-      </div>
-      <div class="form-group span-2" style="display:flex; align-items:flex-end;">
-        <button type="button" class="btn btn-danger btn-sm" onclick="removeIngredient(${ingredientCount})">Remove</button>
-      </div>
-    `;
-    document.getElementById('ingredients-list').appendChild(row);
-  }
-
-  function removeIngredient(id) {
-    document.getElementById(`ingredient-${id}`).remove();
-    if (!document.querySelectorAll('#ingredients-list .card').length) {
-      document.getElementById('no-ingredients').style.display = '';
-    }
-  }
-
-  // ── Form submit ──
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    // TODO: gather form data, POST to /api/compounds
-    // On success redirect to inventory.html with pending badge
-    showFormAlert('Compound submitted for admin approval. (placeholder — backend not connected)', 'success');
+    const override = document.getElementById('bud-override').checked;
+    const payload = {
+      name:               document.getElementById('comp-name').value.trim(),
+      strength:           document.getElementById('comp-strength').value.trim(),
+      type:               document.getElementById('comp-type').value,
+      quantity:           parseInt(document.getElementById('comp-qty').value, 10),
+      unit:               document.getElementById('comp-unit').value,
+      date_made:          document.getElementById('comp-date-made').value,
+      bud:                override
+                            ? document.getElementById('comp-bud-manual').value
+                            : document.getElementById('comp-bud').value,
+      bud_override_reason: override
+                            ? document.getElementById('bud-reason').value.trim()
+                            : null,
+    };
+    try {
+      await apiFetch('/compounds', { method: 'POST', body: JSON.stringify(payload) });
+      window.location.href = 'inventory.html';
+    } catch (err) {
+      showFormAlert(err.message);
+    }
   }
 
   function showFormAlert(msg, type = 'danger') {
@@ -207,7 +166,6 @@
     el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Set today as default date compounded
   document.getElementById('comp-date-made').valueAsDate = new Date();
   recalcBud();
 </script>

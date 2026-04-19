@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>B.U.D. Tracker — Inventory</title>
+  <title>B.U.D.DIES. — Inventory</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <!-- ── Navbar ── -->
 <nav>
-  <span class="brand">B.U.D. Tracker</span>
+  <span class="brand">B.U.D.DIES.</span>
   <a href="dashboard.html">Dashboard</a>
   <a href="create-compound.html">New Compound</a>
   <a href="inventory.html" class="active">Inventory</a>
@@ -49,7 +49,7 @@
 
   <!-- Expiration warnings -->
   <div class="alert alert-warn" id="exp-warning" style="display:none;">
-    ⚠ <strong id="exp-warning-count"></strong> compound(s) are expiring within 30 days.
+    ⚠ <strong id="exp-warning-count"></strong> compound(s) are expiring within 5 days.
   </div>
 
   <!-- ── Table ── -->
@@ -58,7 +58,8 @@
       <table>
         <thead>
           <tr>
-            <th>Compound Name</th>
+            <th>Compound</th>
+            <th>Form</th>
             <th>Lot #</th>
             <th>Type</th>
             <th>Qty</th>
@@ -68,71 +69,6 @@
           </tr>
         </thead>
         <tbody id="inventory-body">
-
-          <!-- Sample rows — replace with dynamic data -->
-          <tr data-name="hydrocortisone cream 1%" data-lot="lot-20260301" data-type="non-sterile" data-status="approved" data-exp="2026-09-01">
-            <td><a href="compound-detail.html?id=1"><strong>Hydrocortisone Cream 1%</strong></a></td>
-            <td>LOT-20260301</td>
-            <td>Non-Sterile</td>
-            <td>60 g</td>
-            <td>2026-09-01</td>
-            <td><span class="badge badge-success">Approved</span></td>
-            <td>
-              <a href="compound-detail.html?id=1" class="btn btn-outline btn-sm">Details</a>
-              <button class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button>
-            </td>
-          </tr>
-
-          <tr data-name="clonidine 0.1mg capsules" data-lot="lot-20260220" data-type="non-sterile" data-status="approved" data-exp="2026-08-20">
-            <td><a href="compound-detail.html?id=2"><strong>Clonidine 0.1mg Capsules</strong></a></td>
-            <td>LOT-20260220</td>
-            <td>Non-Sterile</td>
-            <td>120 caps</td>
-            <td>2026-08-20</td>
-            <td><span class="badge badge-success">Approved</span></td>
-            <td>
-              <a href="compound-detail.html?id=2" class="btn btn-outline btn-sm">Details</a>
-              <button class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button>
-            </td>
-          </tr>
-
-          <tr data-name="vancomycin 25mg/ml injection" data-lot="lot-20260215" data-type="sterile" data-status="rejected" data-exp="2026-03-17">
-            <td><a href="compound-detail.html?id=3"><strong>Vancomycin 25mg/mL Injection</strong></a></td>
-            <td>LOT-20260215</td>
-            <td>Sterile</td>
-            <td>10 mL</td>
-            <td>2026-03-17</td>
-            <td><span class="badge badge-danger">Rejected</span></td>
-            <td>
-              <a href="compound-detail.html?id=3" class="btn btn-outline btn-sm">Details</a>
-            </td>
-          </tr>
-
-          <tr data-name="testosterone cypionate 200mg/ml" data-lot="lot-20260101" data-type="sterile" data-status="pending" data-exp="2026-04-01">
-            <td><a href="compound-detail.html?id=4"><strong>Testosterone Cypionate 200mg/mL</strong></a></td>
-            <td>LOT-20260101</td>
-            <td>Sterile</td>
-            <td>20 mL</td>
-            <td>2026-04-01</td>
-            <td><span class="badge badge-pending">Pending</span></td>
-            <td>
-              <a href="compound-detail.html?id=4" class="btn btn-outline btn-sm">Details</a>
-            </td>
-          </tr>
-
-          <tr data-name="ketamine 50mg/ml nasal" data-lot="lot-20260210" data-type="hazardous" data-status="approved" data-exp="2026-03-10">
-            <td><a href="compound-detail.html?id=5"><strong>Ketamine 50mg/mL Nasal</strong></a></td>
-            <td>LOT-20260210</td>
-            <td>Hazardous</td>
-            <td>5 mL</td>
-            <td style="color:var(--danger); font-weight:600;">2026-03-10</td>
-            <td><span class="badge badge-danger">Expired</span></td>
-            <td>
-              <a href="compound-detail.html?id=5" class="btn btn-outline btn-sm">Details</a>
-              <button class="btn btn-danger btn-sm" onclick="removeItem(this)">Remove</button>
-            </td>
-          </tr>
-
         </tbody>
       </table>
     </div>
@@ -140,13 +76,26 @@
 
   <p id="no-results" style="display:none; color:var(--muted); font-size:.9rem; margin-top:.75rem;">No compounds match the current filter.</p>
 
-  <!-- ── Export row ── -->
-  <div style="display:flex; gap:.75rem; margin-top:1rem; flex-wrap:wrap;">
-    <button class="btn btn-outline btn-sm" onclick="exportCSV()">Export CSV</button>
-    <button class="btn btn-outline btn-sm" onclick="window.print()">Print Report</button>
-  </div>
 
 </div><!-- /page -->
+
+<!-- ── Remove Modal ── -->
+<div id="remove-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
+  <div class="card" style="width:100%; max-width:400px; margin:0 1rem;">
+    <h3 style="margin-bottom:.25rem; color:var(--danger);">Remove from Inventory</h3>
+    <p id="rm-name" style="font-weight:700; margin-bottom:.25rem;"></p>
+    <p id="rm-stock" style="font-size:.82rem; color:var(--muted); margin-bottom:1rem;"></p>
+    <div class="form-group">
+      <label for="rm-qty">Quantity to Remove</label>
+      <input type="number" id="rm-qty" min="1" step="1" placeholder="e.g. 10" />
+    </div>
+    <div style="display:flex; gap:.75rem; justify-content:flex-end; flex-wrap:wrap; margin-top:.25rem;">
+      <button class="btn btn-outline" onclick="closeRemoveModal()">Cancel</button>
+      <button class="btn btn-warn"    onclick="confirmQtyRemove()">Remove Qty</button>
+      <button class="btn btn-danger"  onclick="confirmFullRemove()">Remove All</button>
+    </div>
+  </div>
+</div>
 
 <script src="script.js"></script>
 <script>
@@ -162,7 +111,7 @@
     let visible     = 0;
     let expiringSoon = 0;
     const today     = new Date();
-    const soon      = new Date(); soon.setDate(today.getDate() + 30);
+    const soon      = new Date(); soon.setDate(today.getDate() + 5);
 
     rows.forEach(row => {
       const rName   = row.dataset.name   || '';
@@ -176,6 +125,7 @@
         (!lot     || rLot.includes(lot))     &&
         (!type    || rType === type)          &&
         (!status  || rStatus === status)      &&
+        (status !== '' || rStatus !== 'rejected') &&
         (!expFrom || (rExp && rExp >= new Date(expFrom))) &&
         (!expTo   || (rExp && rExp <= new Date(expTo)));
 
@@ -196,15 +146,101 @@
     }
   }
 
-  // Run on load to set expiration warning
-  applyFilters();
+  function doseFormLabel(unit) {
+    return { caps: 'Capsules', tabs: 'Tablets', mL: 'Liquid', g: 'Cream/Topical', units: 'Units' }[unit] || unit;
+  }
 
-  // ── Remove item ──
-  function removeItem(btn) {
-    if (!confirm('Remove this compound from inventory?')) return;
-    // TODO: DELETE /api/compounds/:id
-    btn.closest('tr').remove();
-    applyFilters();
+  // ── Load inventory from API ──
+  function statusBadgeClass(status, expired) {
+    if (expired) return 'badge-danger';
+    return { approved: 'badge-success', pending: 'badge-pending', rejected: 'badge-danger' }[status] || '';
+  }
+
+  async function loadInventory() {
+    try {
+      const compounds = await apiFetch('/compounds');
+      const tbody = document.getElementById('inventory-body');
+      tbody.innerHTML = '';
+      compounds.forEach(c => {
+        const expired = new Date(c.bud) < new Date();
+        const rowStatus = expired && c.status === 'approved' ? 'expired' : c.status;
+        const showRemove = c.status === 'approved' || expired;
+        const tr = document.createElement('tr');
+        tr.dataset.name   = `${c.name} ${c.strength}`.toLowerCase();
+        tr.dataset.lot    = c.lot_number.toLowerCase();
+        tr.dataset.type   = c.type;
+        tr.dataset.status = rowStatus;
+        tr.dataset.exp    = c.bud;
+        tr.dataset.id     = c.id;
+        tr.innerHTML = `
+          <td><a href="compound-detail.html?id=${c.id}"><strong>${c.name} ${c.strength}</strong></a></td>
+          <td>${doseFormLabel(c.unit)}</td>
+          <td>${c.lot_number}</td>
+          <td>${capitalize(c.type)}</td>
+          <td class="qty-cell">${Math.floor(c.quantity)} ${c.unit}</td>
+          <td ${expired ? 'style="color:var(--danger);font-weight:600;"' : ''}>${formatDate(c.bud)}</td>
+          <td><span class="badge ${statusBadgeClass(c.status, expired)}">${expired ? 'Expired' : capitalize(c.status)}</span></td>
+          <td>
+            <a href="compound-detail.html?id=${c.id}" class="btn btn-outline btn-sm">Details</a>
+            ${showRemove ? `<button class="btn btn-danger btn-sm"
+              data-cid="${c.id}" data-cname="${c.name.replace(/"/g,'&quot;')}"
+              data-cqty="${c.quantity}" data-cunit="${c.unit}"
+              onclick="openRemoveModal(this)">Remove</button>` : ''}
+          </td>`;
+        tbody.appendChild(tr);
+      });
+      applyFilters();
+    } catch (err) {
+      console.error('Failed to load inventory:', err);
+    }
+  }
+
+  loadInventory();
+
+  // ── Remove modal ──
+  let _rid = null, _rmax = null, _runit = null, _rrow = null;
+
+  function openRemoveModal(btn) {
+    _rid   = btn.dataset.cid;
+    _rmax  = parseInt(btn.dataset.cqty, 10);
+    _runit = btn.dataset.cunit;
+    _rrow  = btn.closest('tr');
+    document.getElementById('rm-name').textContent  = btn.dataset.cname;
+    document.getElementById('rm-stock').textContent = `Current stock: ${_rmax} ${_runit}`;
+    const input = document.getElementById('rm-qty');
+    input.value = ''; input.max = _rmax;
+    document.getElementById('remove-modal').style.display = 'flex';
+  }
+  function closeRemoveModal() {
+    document.getElementById('remove-modal').style.display = 'none';
+  }
+  async function confirmQtyRemove() {
+    const qty = parseInt(document.getElementById('rm-qty').value, 10);
+    if (!qty || qty <= 0) { alert('Enter a whole number quantity to remove.'); return; }
+    if (qty > _rmax)      { alert(`Only ${_rmax} ${_runit} in stock.`); return; }
+    try {
+      const result = await apiFetch(`/compounds/${_rid}/quantity`, {
+        method: 'PATCH', body: JSON.stringify({ remove: qty }),
+      });
+      closeRemoveModal();
+      if (result.deleted) {
+        _rrow.remove();
+      } else {
+        _rrow.querySelector('.qty-cell').textContent = `${Math.floor(result.quantity)} ${result.unit}`;
+        const btn = _rrow.querySelector('button[data-cid]');
+        if (btn) btn.dataset.cqty = result.quantity;
+      }
+      applyFilters();
+    } catch (err) { alert(err.message); }
+  }
+  async function confirmFullRemove() {
+    if (!confirm('Remove entire compound from inventory? This cannot be undone.')) return;
+    try {
+      await apiFetch(`/compounds/${_rid}`, { method: 'DELETE' });
+      closeRemoveModal();
+      _rrow.remove();
+      applyFilters();
+    } catch (err) { alert(err.message); }
   }
 
   // ── CSV export ──
