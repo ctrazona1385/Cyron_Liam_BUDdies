@@ -182,7 +182,7 @@
           <td><span class="badge ${statusBadgeClass(c.status, expired)}">${expired ? 'Expired' : capitalize(c.status)}</span></td>
           <td>
             <a href="compound-detail.html?id=${c.id}" class="btn btn-outline btn-sm">Details</a>
-            ${showRemove ? `<button class="btn btn-danger btn-sm"
+            ${showRemove ? `<button class="btn btn-outline btn-sm"
               data-cid="${c.id}" data-cname="${c.name.replace(/"/g,'&quot;')}"
               data-cqty="${c.quantity}" data-cunit="${c.unit}"
               onclick="openRemoveModal(this)">Remove</button>` : ''}

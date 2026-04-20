@@ -163,7 +163,7 @@ nav .btn-logout:hover { background: rgba(255,255,255,.25); }
 .btn-warn:hover     { filter: brightness(1.08); }
 .btn-outline  { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); border-radius: 2px; }
 .btn-outline:hover  { background: var(--primary); color: #fff; }
-.btn-sm { padding: .35rem .85rem; font-size: .82rem; }
+.btn-sm { padding: .35rem .85rem; font-size: .82rem; min-width: 80px; text-align: center; }
 
 /* ── Badges ── */
 .badge {
