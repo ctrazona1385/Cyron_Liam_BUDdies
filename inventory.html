@@ -181,7 +181,7 @@
           <td ${expired ? 'style="color:var(--danger);font-weight:600;"' : ''}>${formatDate(c.bud)}</td>
           <td><span class="badge ${statusBadgeClass(c.status, expired)}">${expired ? 'Expired' : capitalize(c.status)}</span></td>
           <td>
-            <a href="compound-detail.html?id=${c.id}" class="btn btn-outline btn-sm" style="line-height:1>Details</a>
+            <button class="btn btn-outline btn-sm" onclick="location.href='compound-detail.html?id=${c.id}'">Details</button>
             ${showRemove ? `<button class="btn btn-danger btn-sm"
               data-cid="${c.id}" data-cname="${c.name.replace(/"/g,'&quot;')}"
               data-cqty="${c.quantity}" data-cunit="${c.unit}"
