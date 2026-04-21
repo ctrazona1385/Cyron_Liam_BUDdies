@@ -83,7 +83,7 @@ function daysUntil(targetDate) {
 }
 
 /**
- * Formats a YYYY-MM-DD string to a human-readable date.
+ * Formats a YYYY-MM-DD string to a readable date.
  * @param {string} dateStr
  * @returns {string}
  */
@@ -96,7 +96,7 @@ function formatDate(dateStr) {
 
 // ── API helpers ──────────────────────────────────────────────────────────────
 
-const API_BASE = '/api'; // Update this to your backend base URL
+const API_BASE = '/api'; 
 
 /**
  * Wrapper around fetch that automatically includes JSON headers and the
