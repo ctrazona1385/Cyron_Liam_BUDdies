@@ -1,97 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>B.U.D.DIES. — Admin Approval</title>
+  <link rel="icon" type="image/png" href="Logo_color.PNG">
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<!-- ── Navbar ── -->
-<nav>
-  <span class="brand">B.U.D.DIES.</span>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="create-compound.html">New Compound</a>
-  <a href="inventory.html">Inventory</a>
-  <a href="admin-approval.html" class="active admin-only">Approvals</a>
-  <span class="nav-user" id="nav-user-name"></span>
-  <button class="btn-logout" onclick="logout()">Logout</button>
-</nav>
+  <!-- ── Navbar ── -->
+  <nav>
+    <img class="logo" src="Logo_mono.png">
+    <span class="brand">B.U.D.D.I.E.S.</span>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="create-compound.html">New Compound</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="admin-approval.html" class="active admin-only">Approvals</a>
+    <span class="nav-user" id="nav-user-name"></span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </nav>
 
-<div class="page">
-  <h1 class="page-title">Admin Approval Queue</h1>
+  <div class="page">
+    <h1 class="page-title">Admin Approval Queue</h1>
 
-  <!-- Access guard notice (shown if not admin) -->
-  <div id="access-denied" class="alert alert-danger" style="display:none;">
-    You do not have permission to view this page. Admin access required.
+    <!-- Access guard notice (shown if not admin) -->
+    <div id="access-denied" class="alert alert-danger" style="display:none;">
+      You do not have permission to view this page. Admin access required.
+    </div>
+
+    <div id="admin-content">
+
+      <!-- Filter bar -->
+      <div class="search-bar">
+        <select id="filter-status" onchange="loadQueue()">
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+          <option value="">All</option>
+        </select>
+        <input type="text" id="filter-search" placeholder="Search compound name…" oninput="filterQueue()" />
+      </div>
+
+      <!-- Approval cards -->
+      <div id="approval-list">
+      </div><!-- /approval-list -->
+
+      <p id="no-results" style="display:none; color:var(--muted); font-size:.9rem;">No compounds match the current
+        filter.</p>
+
+    </div><!-- /admin-content -->
+  </div><!-- /page -->
+
+  <!-- ── Reject Modal ── -->
+  <div id="reject-modal"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
+    <div class="card" style="width:100%; max-width:440px; margin:0 1rem;">
+      <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Reject Compound</h3>
+      <div class="form-group">
+        <label for="reject-note">Rejection Note <span style="color:var(--danger)">*</span></label>
+        <textarea id="reject-note" rows="3" placeholder="Explain why this compound was rejected…"></textarea>
+      </div>
+      <div style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:.5rem;">
+        <button class="btn btn-outline" onclick="closeRejectModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmReject()">Confirm Reject</button>
+      </div>
+    </div>
   </div>
 
-  <div id="admin-content">
+  <script src="script.js"></script>
+  <script>
+    let rejectTargetId = null;
 
-    <!-- Filter bar -->
-    <div class="search-bar">
-      <select id="filter-status" onchange="loadQueue()">
-        <option value="pending">Pending</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
-        <option value="">All</option>
-      </select>
-      <input type="text" id="filter-search" placeholder="Search compound name…" oninput="filterQueue()" />
-    </div>
+    // Role guard
+    const _currentUser = getCurrentUser();
+    if (_currentUser && _currentUser.role !== 'admin') {
+      document.getElementById('access-denied').style.display = '';
+      document.getElementById('admin-content').style.display = 'none';
+    }
 
-    <!-- Approval cards -->
-    <div id="approval-list">
-    </div><!-- /approval-list -->
+    function statusBadgeClass(status) {
+      return { approved: 'badge-success', pending: 'badge-pending', rejected: 'badge-danger' }[status] || '';
+    }
 
-    <p id="no-results" style="display:none; color:var(--muted); font-size:.9rem;">No compounds match the current filter.</p>
-
-  </div><!-- /admin-content -->
-</div><!-- /page -->
-
-<!-- ── Reject Modal ── -->
-<div id="reject-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
-  <div class="card" style="width:100%; max-width:440px; margin:0 1rem;">
-    <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Reject Compound</h3>
-    <div class="form-group">
-      <label for="reject-note">Rejection Note <span style="color:var(--danger)">*</span></label>
-      <textarea id="reject-note" rows="3" placeholder="Explain why this compound was rejected…"></textarea>
-    </div>
-    <div style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:.5rem;">
-      <button class="btn btn-outline" onclick="closeRejectModal()">Cancel</button>
-      <button class="btn btn-danger"  onclick="confirmReject()">Confirm Reject</button>
-    </div>
-  </div>
-</div>
-
-<script src="script.js"></script>
-<script>
-  let rejectTargetId = null;
-
-  // Role guard
-  const _currentUser = getCurrentUser();
-  if (_currentUser && _currentUser.role !== 'admin') {
-    document.getElementById('access-denied').style.display = '';
-    document.getElementById('admin-content').style.display = 'none';
-  }
-
-  function statusBadgeClass(status) {
-    return { approved: 'badge-success', pending: 'badge-pending', rejected: 'badge-danger' }[status] || '';
-  }
-
-  async function loadQueue() {
-    const statusFilter = document.getElementById('filter-status').value;
-    const list = document.getElementById('approval-list');
-    list.innerHTML = '';
-    try {
-      const compounds = await apiFetch(`/compounds${statusFilter ? '?status=' + statusFilter : ''}`);
-      compounds.forEach(c => {
-        const isPending = c.status === 'pending';
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.dataset.status = c.status;
-        card.dataset.name   = `${c.name} ${c.strength}`;
-        card.innerHTML = `
+    async function loadQueue() {
+      const statusFilter = document.getElementById('filter-status').value;
+      const list = document.getElementById('approval-list');
+      list.innerHTML = '';
+      try {
+        const compounds = await apiFetch(`/compounds${statusFilter ? '?status=' + statusFilter : ''}`);
+        compounds.forEach(c => {
+          const isPending = c.status === 'pending';
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.dataset.status = c.status;
+          card.dataset.name = `${c.name} ${c.strength}`;
+          card.innerHTML = `
           <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.75rem;">
             <div>
               <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem;">
@@ -99,7 +105,7 @@
                 <span class="badge ${statusBadgeClass(c.status)}">${capitalize(c.status)}</span>
               </div>
               <div style="font-size:.85rem;color:var(--muted);">
-                Submitted by <strong>${c.created_by_name}</strong> &nbsp;·&nbsp; ${c.created_at.slice(0,10)}
+                Submitted by <strong>${c.created_by_name}</strong> &nbsp;·&nbsp; ${c.created_at.slice(0, 10)}
                 &nbsp;·&nbsp; Lot: ${c.lot_number}
               </div>
               <div style="font-size:.85rem;margin-top:.4rem;">
@@ -113,63 +119,64 @@
               <button class="btn btn-danger btn-sm" onclick="openRejectModal(${c.id})">Reject</button>` : ''}
             </div>
           </div>`;
-        list.appendChild(card);
+          list.appendChild(card);
+        });
+        filterQueue();
+      } catch (err) {
+        console.error('Failed to load queue:', err);
+      }
+    }
+
+    function filterQueue() {
+      const search = document.getElementById('filter-search').value.toLowerCase();
+      const cards = document.querySelectorAll('#approval-list .card');
+      let visible = 0;
+      cards.forEach(card => {
+        const matchSearch = !search || card.dataset.name.toLowerCase().includes(search);
+        card.style.display = matchSearch ? '' : 'none';
+        if (matchSearch) visible++;
       });
-      filterQueue();
-    } catch (err) {
-      console.error('Failed to load queue:', err);
+      document.getElementById('no-results').style.display = visible ? 'none' : '';
     }
-  }
 
-  function filterQueue() {
-    const search = document.getElementById('filter-search').value.toLowerCase();
-    const cards  = document.querySelectorAll('#approval-list .card');
-    let visible  = 0;
-    cards.forEach(card => {
-      const matchSearch = !search || card.dataset.name.toLowerCase().includes(search);
-      card.style.display = matchSearch ? '' : 'none';
-      if (matchSearch) visible++;
-    });
-    document.getElementById('no-results').style.display = visible ? 'none' : '';
-  }
-
-  async function approveCompound(btn, id) {
-    try {
-      await apiFetch(`/compounds/${id}/approve`, { method: 'PATCH' });
-      loadQueue();
-    } catch (err) {
-      alert(err.message);
+    async function approveCompound(btn, id) {
+      try {
+        await apiFetch(`/compounds/${id}/approve`, { method: 'PATCH' });
+        loadQueue();
+      } catch (err) {
+        alert(err.message);
+      }
     }
-  }
 
-  function openRejectModal(id) {
-    rejectTargetId = id;
-    document.getElementById('reject-modal').style.display = 'flex';
-    document.getElementById('reject-note').value = '';
-  }
-
-  function closeRejectModal() {
-    document.getElementById('reject-modal').style.display = 'none';
-    rejectTargetId = null;
-  }
-
-  async function confirmReject() {
-    const note = document.getElementById('reject-note').value.trim();
-    if (!note) { alert('Please enter a rejection note.'); return; }
-    try {
-      await apiFetch(`/compounds/${rejectTargetId}/reject`, {
-        method: 'PATCH',
-        body: JSON.stringify({ note }),
-      });
-      closeRejectModal();
-      loadQueue();
-    } catch (err) {
-      alert(err.message);
+    function openRejectModal(id) {
+      rejectTargetId = id;
+      document.getElementById('reject-modal').style.display = 'flex';
+      document.getElementById('reject-note').value = '';
     }
-  }
 
-  loadQueue();
-</script>
+    function closeRejectModal() {
+      document.getElementById('reject-modal').style.display = 'none';
+      rejectTargetId = null;
+    }
+
+    async function confirmReject() {
+      const note = document.getElementById('reject-note').value.trim();
+      if (!note) { alert('Please enter a rejection note.'); return; }
+      try {
+        await apiFetch(`/compounds/${rejectTargetId}/reject`, {
+          method: 'PATCH',
+          body: JSON.stringify({ note }),
+        });
+        closeRejectModal();
+        loadQueue();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    loadQueue();
+  </script>
 
 </body>
+
 </html>

@@ -1,441 +1,470 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>B.U.D.DIES. — Compound Detail</title>
+  <link rel="icon" type="image/png" href="Logo_color.PNG">
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<!-- ── Navbar ── -->
-<nav>
-  <span class="brand">B.U.D.DIES.</span>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="create-compound.html">New Compound</a>
-  <a href="inventory.html">Inventory</a>
-  <a href="admin-approval.html" class="admin-only" id="nav-admin">Approvals</a>
-  <span class="nav-user" id="nav-user-name"></span>
-  <button class="btn-logout" onclick="logout()">Logout</button>
-</nav>
+  <!-- ── Navbar ── -->
+  <nav>
+    <img class="logo" src="Logo_mono.png">
+    <span class="brand">B.U.D.D.I.E.S.</span>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="create-compound.html">New Compound</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="admin-approval.html" class="admin-only" id="nav-admin">Approvals</a>
+    <span class="nav-user" id="nav-user-name"></span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </nav>
 
-<div class="page">
+  <div class="page">
 
-  <!-- Back link -->
-  <a href="inventory.html" style="font-size:.85rem; color:var(--muted);">← Back to Inventory</a>
-  <br /><br />
+    <!-- Back link -->
+    <a href="inventory.html" style="font-size:.85rem; color:var(--muted);">← Back to Inventory</a>
+    <br /><br />
 
-  <!-- ── Header row ── -->
-  <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
-    <div>
-      <h1 class="page-title" style="margin-bottom:.25rem;" id="detail-name">Hydrocortisone Cream 1%</h1>
-      <span class="badge badge-success" id="detail-status">Approved</span>
-      &nbsp;
-      <span class="badge badge-info" id="detail-type">Non-Sterile</span>
-    </div>
-    <div style="display:flex; gap:.75rem; flex-wrap:wrap; align-items:center;">
-      <!-- Admin-only actions -->
-      <div id="admin-actions" style="display:none; gap:.75rem; flex-wrap:wrap;">
-        <button class="btn btn-success btn-sm" id="btn-approve" style="display:none;" onclick="approveCompound()">Approve</button>
-        <button class="btn btn-danger btn-sm"  id="btn-reject"  style="display:none;" onclick="openRejectModal()">Reject</button>
-        <button class="btn btn-warn btn-sm" onclick="openBudOverride()">Adjust B.U.D.</button>
+    <!-- ── Header row ── -->
+    <div
+      style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+      <div>
+        <h1 class="page-title" style="margin-bottom:.25rem;" id="detail-name">Hydrocortisone Cream 1%</h1>
+        <span class="badge badge-success" id="detail-status">Approved</span>
+        &nbsp;
+        <span class="badge badge-info" id="detail-type">Non-Sterile</span>
       </div>
-      <!-- All users -->
-      <div id="remove-actions" style="display:none;">
-        <button class="btn btn-danger btn-sm" onclick="openRemoveModal()">Remove / Adjust Qty</button>
-      </div>
-      <!-- Rejected compound actions -->
-      <div id="rejected-actions" style="display:none; gap:.75rem; flex-wrap:wrap;">
-        <button class="btn btn-outline btn-sm" onclick="openResubmitModal()">Edit &amp; Resubmit</button>
-        <button class="btn btn-danger btn-sm"  onclick="deleteRejected()">Delete</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── Info grid ── -->
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
-
-    <div class="card">
-      <h3 style="margin-bottom:.9rem; color:var(--primary-dk); font-size:1rem;">Compound Details</h3>
-      <table style="font-size:.9rem;">
-        <tbody>
-          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0; white-space:nowrap;">Compound ID</td><td id="d-id">#C-001</td></tr>
-          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Strength</td><td id="d-strength">1%</td></tr>
-          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Lot Number</td><td id="d-lot">LOT-20260301</td></tr>
-          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Quantity</td><td id="d-qty">60 g</td></tr>
-          <tr><td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Date Compounded</td><td id="d-date">2026-03-01</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h3 style="margin-bottom:.9rem; color:var(--primary-dk); font-size:1rem;">Beyond-Use Date</h3>
-      <div style="font-size:2rem; font-weight:700; color:var(--accent);" id="d-bud">2026-09-01</div>
-      <div style="font-size:.85rem; color:var(--muted); margin-top:.3rem;" id="d-bud-days">182 days remaining</div>
-      <div style="margin-top:.75rem;">
-        <div class="risk-bar-wrap">
-          <div style="font-size:.75rem; color:var(--muted); margin-bottom:.25rem;">Time remaining until B.U.D.</div>
-          <div class="risk-bar-track">
-            <div class="risk-bar-fill" id="d-bud-bar" style="width:80%;"></div>
-          </div>
+      <div style="display:flex; gap:.75rem; flex-wrap:wrap; align-items:center;">
+        <!-- Admin-only actions -->
+        <div id="admin-actions" style="display:none; gap:.75rem; flex-wrap:wrap;">
+          <button class="btn btn-success btn-sm" id="btn-approve" style="display:none;"
+            onclick="approveCompound()">Approve</button>
+          <button class="btn btn-danger btn-sm" id="btn-reject" style="display:none;"
+            onclick="openRejectModal()">Reject</button>
+          <button class="btn btn-warn btn-sm" onclick="openBudOverride()">Adjust B.U.D.</button>
+        </div>
+        <!-- All users -->
+        <div id="remove-actions" style="display:none;">
+          <button class="btn btn-danger btn-sm" onclick="openRemoveModal()">Remove / Adjust Qty</button>
+        </div>
+        <!-- Rejected compound actions -->
+        <div id="rejected-actions" style="display:none; gap:.75rem; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" onclick="openResubmitModal()">Edit &amp; Resubmit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteRejected()">Delete</button>
         </div>
       </div>
-      <div style="margin-top:.75rem; font-size:.82rem; color:var(--muted);" id="d-bud-override-note"></div>
     </div>
 
-  </div>
+    <!-- ── Info grid ── -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
 
-  <!-- ── Rejection banner (shown when rejected) ── -->
-  <div id="rejection-banner" style="display:none;" class="alert alert-danger"></div>
+      <div class="card">
+        <h3 style="margin-bottom:.9rem; color:var(--primary-dk); font-size:1rem;">Compound Details</h3>
+        <table style="font-size:.9rem;">
+          <tbody>
+            <tr>
+              <td style="color:var(--muted); padding:.35rem .5rem .35rem 0; white-space:nowrap;">Compound ID</td>
+              <td id="d-id">#C-001</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Strength</td>
+              <td id="d-strength">1%</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Lot Number</td>
+              <td id="d-lot">LOT-20260301</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Quantity</td>
+              <td id="d-qty">60 g</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted); padding:.35rem .5rem .35rem 0;">Date Compounded</td>
+              <td id="d-date">2026-03-01</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-  <!-- ── Admin action log ── -->
-  <div class="card" id="action-log-section">
-    <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Admin Action Log</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Admin</th>
-            <th>Action</th>
-            <th>Note</th>
-          </tr>
-        </thead>
-        <tbody id="action-log-body">
-        </tbody>
-      </table>
+      <div class="card">
+        <h3 style="margin-bottom:.9rem; color:var(--primary-dk); font-size:1rem;">Beyond-Use Date</h3>
+        <div style="font-size:2rem; font-weight:700; color:var(--accent);" id="d-bud">2026-09-01</div>
+        <div style="font-size:.85rem; color:var(--muted); margin-top:.3rem;" id="d-bud-days">182 days remaining</div>
+        <div style="margin-top:.75rem;">
+          <div class="risk-bar-wrap">
+            <div style="font-size:.75rem; color:var(--muted); margin-bottom:.25rem;">Time remaining until B.U.D.</div>
+            <div class="risk-bar-track">
+              <div class="risk-bar-fill" id="d-bud-bar" style="width:80%;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:.75rem; font-size:.82rem; color:var(--muted);" id="d-bud-override-note"></div>
+      </div>
+
     </div>
-  </div>
 
-  <!-- ── Notes ── -->
-  <div class="card">
-    <h3 style="margin-bottom:.6rem; color:var(--primary-dk); font-size:1rem;">Notes</h3>
-    <p id="d-notes" style="font-size:.9rem; color:var(--muted);">No special notes recorded.</p>
-  </div>
+    <!-- ── Rejection banner (shown when rejected) ── -->
+    <div id="rejection-banner" style="display:none;" class="alert alert-danger"></div>
 
-</div><!-- /page -->
-
-<!-- ── Remove / Adjust Qty Modal ── -->
-<div id="detail-remove-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
-  <div class="card" style="width:100%; max-width:400px; margin:0 1rem;">
-    <h3 style="margin-bottom:.25rem; color:var(--danger);">Remove from Inventory</h3>
-    <p id="drm-name" style="font-weight:700; margin-bottom:.25rem;"></p>
-    <p id="drm-stock" style="font-size:.82rem; color:var(--muted); margin-bottom:1rem;"></p>
-    <div class="form-group">
-      <label for="drm-qty">Quantity to Remove</label>
-      <input type="number" id="drm-qty" min="1" step="1" placeholder="e.g. 10" />
+    <!-- ── Admin action log ── -->
+    <div class="card" id="action-log-section">
+      <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Admin Action Log</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Admin</th>
+              <th>Action</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody id="action-log-body">
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div style="display:flex; gap:.75rem; justify-content:flex-end; flex-wrap:wrap; margin-top:.25rem;">
-      <button class="btn btn-outline" onclick="closeRemoveModal()">Cancel</button>
-      <button class="btn btn-warn"    onclick="confirmQtyRemove()">Remove Qty</button>
-      <button class="btn btn-danger"  onclick="confirmFullRemove()">Remove All</button>
-    </div>
-  </div>
-</div>
 
-<!-- ── Reject Modal ── -->
-<div id="reject-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
-  <div class="card" style="width:100%; max-width:420px; margin:0 1rem;">
-    <h3 style="margin-bottom:1rem; color:var(--danger);">Reject Compound</h3>
-    <div class="form-group">
-      <label for="reject-note">Rejection Note <span style="color:var(--danger)">*</span></label>
-      <textarea id="reject-note" rows="3" placeholder="Reason for rejection…"></textarea>
+    <!-- ── Notes ── -->
+    <div class="card">
+      <h3 style="margin-bottom:.6rem; color:var(--primary-dk); font-size:1rem;">Notes</h3>
+      <p id="d-notes" style="font-size:.9rem; color:var(--muted);">No special notes recorded.</p>
     </div>
-    <div style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:.5rem;">
-      <button class="btn btn-outline" onclick="closeRejectModal()">Cancel</button>
-      <button class="btn btn-danger"  onclick="confirmReject()">Confirm Reject</button>
-    </div>
-  </div>
-</div>
 
-<!-- ── Edit & Resubmit Modal ── -->
-<div id="resubmit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
-  <div class="card" style="width:100%; max-width:520px; margin:0 1rem; max-height:90vh; overflow-y:auto;">
-    <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Edit &amp; Resubmit Compound</h3>
-    <div class="form-grid">
+  </div><!-- /page -->
+
+  <!-- ── Remove / Adjust Qty Modal ── -->
+  <div id="detail-remove-modal"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
+    <div class="card" style="width:100%; max-width:400px; margin:0 1rem;">
+      <h3 style="margin-bottom:.25rem; color:var(--danger);">Remove from Inventory</h3>
+      <p id="drm-name" style="font-weight:700; margin-bottom:.25rem;"></p>
+      <p id="drm-stock" style="font-size:.82rem; color:var(--muted); margin-bottom:1rem;"></p>
       <div class="form-group">
-        <label for="rs-name">Compound Name</label>
-        <input type="text" id="rs-name" required />
+        <label for="drm-qty">Quantity to Remove</label>
+        <input type="number" id="drm-qty" min="1" step="1" placeholder="e.g. 10" />
       </div>
-      <div class="form-group">
-        <label for="rs-strength">Strength</label>
-        <input type="text" id="rs-strength" required />
+      <div style="display:flex; gap:.75rem; justify-content:flex-end; flex-wrap:wrap; margin-top:.25rem;">
+        <button class="btn btn-outline" onclick="closeRemoveModal()">Cancel</button>
+        <button class="btn btn-warn" onclick="confirmQtyRemove()">Remove Qty</button>
+        <button class="btn btn-danger" onclick="confirmFullRemove()">Remove All</button>
       </div>
-      <div class="form-group">
-        <label for="rs-qty">Quantity</label>
-        <input type="number" id="rs-qty" min="1" step="1" required />
-      </div>
-      <div class="form-group">
-        <label for="rs-unit">Unit</label>
-        <select id="rs-unit" required>
-          <option value="g">Grams (g)</option>
-          <option value="mL">Milliliters (mL)</option>
-          <option value="caps">Capsules</option>
-          <option value="tabs">Tablets</option>
-          <option value="units">Units</option>
-        </select>
-      </div>
-      <div class="form-group span-2">
-        <label for="rs-type">Compound Type</label>
-        <select id="rs-type" required>
-          <option value="sterile">Sterile</option>
-          <option value="non-sterile">Non-Sterile</option>
-          <option value="hazardous">Hazardous</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="rs-date-made">Date Compounded</label>
-        <input type="date" id="rs-date-made" required />
-      </div>
-      <div class="form-group">
-        <label for="rs-bud">Beyond-Use Date</label>
-        <input type="date" id="rs-bud" required />
-      </div>
-    </div>
-    <div style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:.5rem;">
-      <button class="btn btn-outline" onclick="closeResubmitModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="confirmResubmit()">Resubmit for Approval</button>
     </div>
   </div>
-</div>
 
-<!-- ── B.U.D. Override Modal ── -->
-<div id="bud-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
-  <div class="card" style="width:100%; max-width:420px; margin:0 1rem;">
-    <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Adjust B.U.D.</h3>
-    <div class="form-group">
-      <label for="new-bud">New Beyond-Use Date</label>
-      <input type="date" id="new-bud" />
-    </div>
-    <div class="form-group">
-      <label for="bud-override-reason">Reason for Override <span style="color:var(--danger)">*</span></label>
-      <textarea id="bud-override-reason" rows="2" placeholder="Justify the B.U.D. change…"></textarea>
-    </div>
-    <div style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:.5rem;">
-      <button class="btn btn-outline" onclick="closeBudOverride()">Cancel</button>
-      <button class="btn btn-warn"    onclick="saveBudOverride()">Save Override</button>
+  <!-- ── Reject Modal ── -->
+  <div id="reject-modal"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
+    <div class="card" style="width:100%; max-width:420px; margin:0 1rem;">
+      <h3 style="margin-bottom:1rem; color:var(--danger);">Reject Compound</h3>
+      <div class="form-group">
+        <label for="reject-note">Rejection Note <span style="color:var(--danger)">*</span></label>
+        <textarea id="reject-note" rows="3" placeholder="Reason for rejection…"></textarea>
+      </div>
+      <div style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:.5rem;">
+        <button class="btn btn-outline" onclick="closeRejectModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmReject()">Confirm Reject</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script src="script.js"></script>
-<script>
-  const _params = new URLSearchParams(window.location.search);
-  const compId  = _params.get('id');
-  if (!compId) window.location.href = 'inventory.html';
+  <!-- ── Edit & Resubmit Modal ── -->
+  <div id="resubmit-modal"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
+    <div class="card" style="width:100%; max-width:520px; margin:0 1rem; max-height:90vh; overflow-y:auto;">
+      <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Edit &amp; Resubmit Compound</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="rs-name">Compound Name</label>
+          <input type="text" id="rs-name" required />
+        </div>
+        <div class="form-group">
+          <label for="rs-strength">Strength</label>
+          <input type="text" id="rs-strength" required />
+        </div>
+        <div class="form-group">
+          <label for="rs-qty">Quantity</label>
+          <input type="number" id="rs-qty" min="1" step="1" required />
+        </div>
+        <div class="form-group">
+          <label for="rs-unit">Unit</label>
+          <select id="rs-unit" required>
+            <option value="g">Grams (g)</option>
+            <option value="mL">Milliliters (mL)</option>
+            <option value="caps">Capsules</option>
+            <option value="tabs">Tablets</option>
+            <option value="units">Units</option>
+          </select>
+        </div>
+        <div class="form-group span-2">
+          <label for="rs-type">Compound Type</label>
+          <select id="rs-type" required>
+            <option value="sterile">Sterile</option>
+            <option value="non-sterile">Non-Sterile</option>
+            <option value="hazardous">Hazardous</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rs-date-made">Date Compounded</label>
+          <input type="date" id="rs-date-made" required />
+        </div>
+        <div class="form-group">
+          <label for="rs-bud">Beyond-Use Date</label>
+          <input type="date" id="rs-bud" required />
+        </div>
+      </div>
+      <div style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:.5rem;">
+        <button class="btn btn-outline" onclick="closeResubmitModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmResubmit()">Resubmit for Approval</button>
+      </div>
+    </div>
+  </div>
 
-  function statusBadgeClass(status, expired) {
-    if (expired) return 'badge-danger';
-    return { approved: 'badge-success', pending: 'badge-pending', rejected: 'badge-danger' }[status] || '';
-  }
+  <!-- ── B.U.D. Override Modal ── -->
+  <div id="bud-modal"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
+    <div class="card" style="width:100%; max-width:420px; margin:0 1rem;">
+      <h3 style="margin-bottom:1rem; color:var(--primary-dk);">Adjust B.U.D.</h3>
+      <div class="form-group">
+        <label for="new-bud">New Beyond-Use Date</label>
+        <input type="date" id="new-bud" />
+      </div>
+      <div class="form-group">
+        <label for="bud-override-reason">Reason for Override <span style="color:var(--danger)">*</span></label>
+        <textarea id="bud-override-reason" rows="2" placeholder="Justify the B.U.D. change…"></textarea>
+      </div>
+      <div style="display:flex; gap:.75rem; justify-content:flex-end; margin-top:.5rem;">
+        <button class="btn btn-outline" onclick="closeBudOverride()">Cancel</button>
+        <button class="btn btn-warn" onclick="saveBudOverride()">Save Override</button>
+      </div>
+    </div>
+  </div>
 
-  function actionBadgeClass(action) {
-    return { approved: 'badge-success', rejected: 'badge-danger', created: 'badge-info',
-             adjusted_bud: 'badge-warn', removed: 'badge-danger' }[action] || 'badge-info';
-  }
+  <script src="script.js"></script>
+  <script>
+    const _params = new URLSearchParams(window.location.search);
+    const compId = _params.get('id');
+    if (!compId) window.location.href = 'inventory.html';
 
-  // ── B.U.D. bar calculation ──
-  function calcBudBar(dateMade, budDate) {
-    const total   = new Date(budDate) - new Date(dateMade);
-    const elapsed = Date.now()        - new Date(dateMade);
-    const pct     = Math.max(0, Math.min(100, 100 - (elapsed / total * 100)));
-    const bar     = document.getElementById('d-bud-bar');
-    bar.style.width = pct + '%';
-    bar.className = 'risk-bar-fill' + (pct < 25 ? ' high' : pct < 50 ? ' medium' : '');
-    const days    = Math.ceil((new Date(budDate) - Date.now()) / 86400000);
-    document.getElementById('d-bud-days').textContent =
-      days > 0 ? `${days} days remaining` : 'EXPIRED';
-  }
+    function statusBadgeClass(status, expired) {
+      if (expired) return 'badge-danger';
+      return { approved: 'badge-success', pending: 'badge-pending', rejected: 'badge-danger' }[status] || '';
+    }
 
-  let _detailCompound = null;
+    function actionBadgeClass(action) {
+      return {
+        approved: 'badge-success', rejected: 'badge-danger', created: 'badge-info',
+        adjusted_bud: 'badge-warn', removed: 'badge-danger'
+      }[action] || 'badge-info';
+    }
 
-  async function loadDetail() {
-    try {
-      const c = await apiFetch(`/compounds/${compId}`);
-      _detailCompound = c;
-      const expired = new Date(c.bud) < new Date();
+    // ── B.U.D. bar calculation ──
+    function calcBudBar(dateMade, budDate) {
+      const total = new Date(budDate) - new Date(dateMade);
+      const elapsed = Date.now() - new Date(dateMade);
+      const pct = Math.max(0, Math.min(100, 100 - (elapsed / total * 100)));
+      const bar = document.getElementById('d-bud-bar');
+      bar.style.width = pct + '%';
+      bar.className = 'risk-bar-fill' + (pct < 25 ? ' high' : pct < 50 ? ' medium' : '');
+      const days = Math.ceil((new Date(budDate) - Date.now()) / 86400000);
+      document.getElementById('d-bud-days').textContent =
+        days > 0 ? `${days} days remaining` : 'EXPIRED';
+    }
 
-      document.title = `B.U.D.DIES. — ${c.name}`;
-      document.getElementById('detail-name').textContent  = `${c.name} ${c.strength}`;
-      const statusEl = document.getElementById('detail-status');
-      statusEl.textContent = expired ? 'Expired' : capitalize(c.status);
-      statusEl.className   = `badge ${statusBadgeClass(c.status, expired)}`;
-      document.getElementById('detail-type').textContent  = capitalize(c.type);
-      document.getElementById('d-id').textContent         = `#C-${String(c.id).padStart(3,'0')}`;
-      document.getElementById('d-strength').textContent   = c.strength;
-      document.getElementById('d-lot').textContent        = c.lot_number;
-      document.getElementById('d-qty').textContent        = `${Math.floor(c.quantity)} ${c.unit}`;
-      document.getElementById('d-date').textContent       = formatDate(c.date_made);
-      document.getElementById('d-bud').textContent        = formatDate(c.bud);
-      document.getElementById('d-notes').textContent      = c.notes || 'No special notes recorded.';
+    let _detailCompound = null;
 
-      if (c.bud_override_reason) {
-        document.getElementById('d-bud-override-note').textContent =
-          `Override by ${c.bud_overridden_by_name} — ${c.bud_override_reason}`;
-      }
-      calcBudBar(c.date_made, c.bud);
+    async function loadDetail() {
+      try {
+        const c = await apiFetch(`/compounds/${compId}`);
+        _detailCompound = c;
+        const expired = new Date(c.bud) < new Date();
 
-      if (c.status === 'rejected') {
-        const banner = document.getElementById('rejection-banner');
-        banner.style.display = '';
-        banner.innerHTML = `<strong>Rejected:</strong> ${c.rejection_note || 'No reason provided.'}`;
-        document.getElementById('rejected-actions').style.display = 'flex';
-      }
+        document.title = `B.U.D.DIES. — ${c.name}`;
+        document.getElementById('detail-name').textContent = `${c.name} ${c.strength}`;
+        const statusEl = document.getElementById('detail-status');
+        statusEl.textContent = expired ? 'Expired' : capitalize(c.status);
+        statusEl.className = `badge ${statusBadgeClass(c.status, expired)}`;
+        document.getElementById('detail-type').textContent = capitalize(c.type);
+        document.getElementById('d-id').textContent = `#C-${String(c.id).padStart(3, '0')}`;
+        document.getElementById('d-strength').textContent = c.strength;
+        document.getElementById('d-lot').textContent = c.lot_number;
+        document.getElementById('d-qty').textContent = `${Math.floor(c.quantity)} ${c.unit}`;
+        document.getElementById('d-date').textContent = formatDate(c.date_made);
+        document.getElementById('d-bud').textContent = formatDate(c.bud);
+        document.getElementById('d-notes').textContent = c.notes || 'No special notes recorded.';
 
-      if (getCurrentUser().role === 'admin') {
-        document.getElementById('admin-actions').style.display = 'flex';
-        if (c.status === 'pending') {
-          document.getElementById('btn-approve').style.display = '';
-          document.getElementById('btn-reject').style.display  = '';
+        if (c.bud_override_reason) {
+          document.getElementById('d-bud-override-note').textContent =
+            `Override by ${c.bud_overridden_by_name} — ${c.bud_override_reason}`;
         }
-      }
-      if (c.status === 'approved' || expired) {
-        document.getElementById('remove-actions').style.display = '';
-      }
+        calcBudBar(c.date_made, c.bud);
 
-      const logBody = document.getElementById('action-log-body');
-      logBody.innerHTML = '';
-      (c.activity_log || []).forEach(entry => {
-        logBody.innerHTML += `
+        if (c.status === 'rejected') {
+          const banner = document.getElementById('rejection-banner');
+          banner.style.display = '';
+          banner.innerHTML = `<strong>Rejected:</strong> ${c.rejection_note || 'No reason provided.'}`;
+          document.getElementById('rejected-actions').style.display = 'flex';
+        }
+
+        if (getCurrentUser().role === 'admin') {
+          document.getElementById('admin-actions').style.display = 'flex';
+          if (c.status === 'pending') {
+            document.getElementById('btn-approve').style.display = '';
+            document.getElementById('btn-reject').style.display = '';
+          }
+        }
+        if (c.status === 'approved' || expired) {
+          document.getElementById('remove-actions').style.display = '';
+        }
+
+        const logBody = document.getElementById('action-log-body');
+        logBody.innerHTML = '';
+        (c.activity_log || []).forEach(entry => {
+          logBody.innerHTML += `
           <tr>
-            <td>${entry.created_at.slice(0,10)}</td>
+            <td>${entry.created_at.slice(0, 10)}</td>
             <td>${entry.user_name}</td>
             <td><span class="badge ${actionBadgeClass(entry.action)}">${capitalize(entry.action)}</span></td>
             <td>${entry.notes || '—'}</td>
           </tr>`;
-      });
-    } catch (err) {
-      console.error('Failed to load compound:', err);
+        });
+      } catch (err) {
+        console.error('Failed to load compound:', err);
+      }
     }
-  }
 
-  // ── Approve / Reject ──
-  async function approveCompound() {
-    if (!confirm('Approve this compound?')) return;
-    try {
-      await apiFetch(`/compounds/${compId}/approve`, { method: 'PATCH' });
-      loadDetail();
-    } catch (err) { alert(err.message); }
-  }
-
-  function openRejectModal() {
-    document.getElementById('reject-note').value = '';
-    document.getElementById('reject-modal').style.display = 'flex';
-  }
-  function closeRejectModal() {
-    document.getElementById('reject-modal').style.display = 'none';
-  }
-  async function confirmReject() {
-    const note = document.getElementById('reject-note').value.trim();
-    if (!note) { alert('A rejection note is required.'); return; }
-    try {
-      await apiFetch(`/compounds/${compId}/reject`, {
-        method: 'PATCH',
-        body: JSON.stringify({ note }),
-      });
-      closeRejectModal();
-      loadDetail();
-    } catch (err) { alert(err.message); }
-  }
-
-  // ── Remove / adjust qty modal ──
-  function openRemoveModal() {
-    const c = _detailCompound;
-    document.getElementById('drm-name').textContent  = c.name;
-    document.getElementById('drm-stock').textContent = `Current stock: ${Math.floor(c.quantity)} ${c.unit}`;
-    const input = document.getElementById('drm-qty');
-    input.value = ''; input.max = c.quantity;
-    document.getElementById('detail-remove-modal').style.display = 'flex';
-  }
-  function closeRemoveModal() {
-    document.getElementById('detail-remove-modal').style.display = 'none';
-  }
-  async function confirmQtyRemove() {
-    const c   = _detailCompound;
-    const qty = parseInt(document.getElementById('drm-qty').value, 10);
-    if (!qty || qty <= 0)  { alert('Enter a whole number quantity to remove.'); return; }
-    if (qty > c.quantity)  { alert(`Only ${Math.floor(c.quantity)} ${c.unit} in stock.`); return; }
-    try {
-      const result = await apiFetch(`/compounds/${compId}/quantity`, {
-        method: 'PATCH', body: JSON.stringify({ remove: qty }),
-      });
-      closeRemoveModal();
-      if (result.deleted) { window.location.href = 'inventory.html'; }
-      else                 { loadDetail(); }
-    } catch (err) { alert(err.message); }
-  }
-  async function confirmFullRemove() {
-    if (!confirm('Remove entire compound from inventory? This cannot be undone.')) return;
-    try {
-      await apiFetch(`/compounds/${compId}`, { method: 'DELETE' });
-      window.location.href = 'inventory.html';
-    } catch (err) { alert(err.message); }
-  }
-
-  // ── B.U.D. override modal ──
-  function openBudOverride() {
-    document.getElementById('bud-modal').style.display = 'flex';
-  }
-  function closeBudOverride() {
-    document.getElementById('bud-modal').style.display = 'none';
-  }
-  async function saveBudOverride() {
-    const bud    = document.getElementById('new-bud').value;
-    const reason = document.getElementById('bud-override-reason').value.trim();
-    if (!bud || !reason) { alert('Please fill in all fields.'); return; }
-    try {
-      await apiFetch(`/compounds/${compId}/bud`, {
-        method: 'PATCH',
-        body: JSON.stringify({ bud, reason }),
-      });
-      closeBudOverride();
-      loadDetail();
-    } catch (err) {
-      alert(err.message);
+    // ── Approve / Reject ──
+    async function approveCompound() {
+      if (!confirm('Approve this compound?')) return;
+      try {
+        await apiFetch(`/compounds/${compId}/approve`, { method: 'PATCH' });
+        loadDetail();
+      } catch (err) { alert(err.message); }
     }
-  }
 
-  // ── Edit & Resubmit (rejected compounds) ──
-  function openResubmitModal() {
-    const c = _detailCompound;
-    document.getElementById('rs-name').value      = c.name;
-    document.getElementById('rs-strength').value  = c.strength;
-    document.getElementById('rs-qty').value       = Math.floor(c.quantity);
-    document.getElementById('rs-unit').value      = c.unit;
-    document.getElementById('rs-type').value      = c.type;
-    document.getElementById('rs-date-made').value = c.date_made;
-    document.getElementById('rs-bud').value       = c.bud;
-    document.getElementById('resubmit-modal').style.display = 'flex';
-  }
-  function closeResubmitModal() {
-    document.getElementById('resubmit-modal').style.display = 'none';
-  }
-  async function confirmResubmit() {
-    const payload = {
-      name:     document.getElementById('rs-name').value.trim(),
-      strength: document.getElementById('rs-strength').value.trim(),
-      type:     document.getElementById('rs-type').value,
-      quantity: parseInt(document.getElementById('rs-qty').value, 10),
-      unit:     document.getElementById('rs-unit').value,
-      date_made: document.getElementById('rs-date-made').value,
-      bud:      document.getElementById('rs-bud').value,
-    };
-    try {
-      await apiFetch(`/compounds/${compId}/resubmit`, { method: 'PATCH', body: JSON.stringify(payload) });
-      closeResubmitModal();
-      window.location.href = 'inventory.html';
-    } catch (err) { alert(err.message); }
-  }
-  async function deleteRejected() {
-    if (!confirm('Permanently delete this compound? This cannot be undone.')) return;
-    try {
-      await apiFetch(`/compounds/${compId}`, { method: 'DELETE' });
-      window.location.href = 'inventory.html';
-    } catch (err) { alert(err.message); }
-  }
+    function openRejectModal() {
+      document.getElementById('reject-note').value = '';
+      document.getElementById('reject-modal').style.display = 'flex';
+    }
+    function closeRejectModal() {
+      document.getElementById('reject-modal').style.display = 'none';
+    }
+    async function confirmReject() {
+      const note = document.getElementById('reject-note').value.trim();
+      if (!note) { alert('A rejection note is required.'); return; }
+      try {
+        await apiFetch(`/compounds/${compId}/reject`, {
+          method: 'PATCH',
+          body: JSON.stringify({ note }),
+        });
+        closeRejectModal();
+        loadDetail();
+      } catch (err) { alert(err.message); }
+    }
 
-  loadDetail();
-</script>
+    // ── Remove / adjust qty modal ──
+    function openRemoveModal() {
+      const c = _detailCompound;
+      document.getElementById('drm-name').textContent = c.name;
+      document.getElementById('drm-stock').textContent = `Current stock: ${Math.floor(c.quantity)} ${c.unit}`;
+      const input = document.getElementById('drm-qty');
+      input.value = ''; input.max = c.quantity;
+      document.getElementById('detail-remove-modal').style.display = 'flex';
+    }
+    function closeRemoveModal() {
+      document.getElementById('detail-remove-modal').style.display = 'none';
+    }
+    async function confirmQtyRemove() {
+      const c = _detailCompound;
+      const qty = parseInt(document.getElementById('drm-qty').value, 10);
+      if (!qty || qty <= 0) { alert('Enter a whole number quantity to remove.'); return; }
+      if (qty > c.quantity) { alert(`Only ${Math.floor(c.quantity)} ${c.unit} in stock.`); return; }
+      try {
+        const result = await apiFetch(`/compounds/${compId}/quantity`, {
+          method: 'PATCH', body: JSON.stringify({ remove: qty }),
+        });
+        closeRemoveModal();
+        if (result.deleted) { window.location.href = 'inventory.html'; }
+        else { loadDetail(); }
+      } catch (err) { alert(err.message); }
+    }
+    async function confirmFullRemove() {
+      if (!confirm('Remove entire compound from inventory? This cannot be undone.')) return;
+      try {
+        await apiFetch(`/compounds/${compId}`, { method: 'DELETE' });
+        window.location.href = 'inventory.html';
+      } catch (err) { alert(err.message); }
+    }
+
+    // ── B.U.D. override modal ──
+    function openBudOverride() {
+      document.getElementById('bud-modal').style.display = 'flex';
+    }
+    function closeBudOverride() {
+      document.getElementById('bud-modal').style.display = 'none';
+    }
+    async function saveBudOverride() {
+      const bud = document.getElementById('new-bud').value;
+      const reason = document.getElementById('bud-override-reason').value.trim();
+      if (!bud || !reason) { alert('Please fill in all fields.'); return; }
+      try {
+        await apiFetch(`/compounds/${compId}/bud`, {
+          method: 'PATCH',
+          body: JSON.stringify({ bud, reason }),
+        });
+        closeBudOverride();
+        loadDetail();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    // ── Edit & Resubmit (rejected compounds) ──
+    function openResubmitModal() {
+      const c = _detailCompound;
+      document.getElementById('rs-name').value = c.name;
+      document.getElementById('rs-strength').value = c.strength;
+      document.getElementById('rs-qty').value = Math.floor(c.quantity);
+      document.getElementById('rs-unit').value = c.unit;
+      document.getElementById('rs-type').value = c.type;
+      document.getElementById('rs-date-made').value = c.date_made;
+      document.getElementById('rs-bud').value = c.bud;
+      document.getElementById('resubmit-modal').style.display = 'flex';
+    }
+    function closeResubmitModal() {
+      document.getElementById('resubmit-modal').style.display = 'none';
+    }
+    async function confirmResubmit() {
+      const payload = {
+        name: document.getElementById('rs-name').value.trim(),
+        strength: document.getElementById('rs-strength').value.trim(),
+        type: document.getElementById('rs-type').value,
+        quantity: parseInt(document.getElementById('rs-qty').value, 10),
+        unit: document.getElementById('rs-unit').value,
+        date_made: document.getElementById('rs-date-made').value,
+        bud: document.getElementById('rs-bud').value,
+      };
+      try {
+        await apiFetch(`/compounds/${compId}/resubmit`, { method: 'PATCH', body: JSON.stringify(payload) });
+        closeResubmitModal();
+        window.location.href = 'inventory.html';
+      } catch (err) { alert(err.message); }
+    }
+    async function deleteRejected() {
+      if (!confirm('Permanently delete this compound? This cannot be undone.')) return;
+      try {
+        await apiFetch(`/compounds/${compId}`, { method: 'DELETE' });
+        window.location.href = 'inventory.html';
+      } catch (err) { alert(err.message); }
+    }
+
+    loadDetail();
+  </script>
 
 </body>
+
 </html>

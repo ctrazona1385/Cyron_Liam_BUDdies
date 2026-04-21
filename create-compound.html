@@ -1,174 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>B.U.D.DIES. — Create Compound</title>
+  <link rel="icon" type="image/png" href="Logo_color.PNG">
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<!-- ── Navbar ── -->
-<nav>
-  <span class="brand">B.U.D.DIES.</span>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="create-compound.html" class="active">New Compound</a>
-  <a href="inventory.html">Inventory</a>
-  <!-- Admin only -->
-  <a href="admin-approval.html" class="admin-only" id="nav-admin">Approvals</a>
-  <span class="nav-user" id="nav-user-name"></span>
-  <button class="btn-logout" onclick="logout()">Logout</button>
-</nav>
+  <!-- ── Navbar ── -->
+  <nav>
+    <img class="logo" src="Logo_mono.png">
+    <span class="brand">B.U.D.D.I.E.S.</span>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="create-compound.html" class="active">New Compound</a>
+    <a href="inventory.html">Inventory</a>
+    <!-- Admin only -->
+    <a href="admin-approval.html" class="admin-only" id="nav-admin">Approvals</a>
+    <span class="nav-user" id="nav-user-name"></span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </nav>
 
-<div class="page">
-  <h1 class="page-title">Create Compound</h1>
+  <div class="page">
+    <h1 class="page-title">Create Compound</h1>
 
-  <div id="form-alert" style="display:none;" class="alert"></div>
+    <div id="form-alert" style="display:none;" class="alert"></div>
 
-  <div class="card">
-    <form id="compound-form" onsubmit="handleSubmit(event)">
+    <div class="card">
+      <form id="compound-form" onsubmit="handleSubmit(event)">
 
-      <h3 style="margin-bottom:1.1rem; color:var(--primary-dk);">Compound Info</h3>
+        <h3 style="margin-bottom:1.1rem; color:var(--primary-dk);">Compound Info</h3>
 
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="comp-name">Compound Name</label>
-          <input type="text" id="comp-name" placeholder="e.g. Hydrocortisone Cream 1%" required />
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="comp-name">Compound Name</label>
+            <input type="text" id="comp-name" placeholder="e.g. Hydrocortisone Cream 1%" required />
+          </div>
+          <div class="form-group">
+            <label for="comp-strength">Strength</label>
+            <input type="text" id="comp-strength" placeholder="e.g. 1%" required />
+          </div>
+          <div class="form-group">
+            <label for="comp-qty">Quantity Made</label>
+            <input type="number" id="comp-qty" placeholder="e.g. 30" min="1" required />
+          </div>
+          <div class="form-group">
+            <label for="comp-unit">Unit</label>
+            <select id="comp-unit" required>
+              <option value="">— Select —</option>
+              <option value="g">Grams (g)</option>
+              <option value="mL">Milliliters (mL)</option>
+              <option value="caps">Capsules</option>
+              <option value="tabs">Tablets</option>
+              <option value="units">Units</option>
+            </select>
+          </div>
+          <div class="form-group span-2">
+            <label for="comp-type">Compound Type</label>
+            <select id="comp-type" required>
+              <option value="">— Select —</option>
+              <option value="sterile">Sterile</option>
+              <option value="non-sterile">Non-Sterile</option>
+              <option value="hazardous">Hazardous</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="comp-strength">Strength</label>
-          <input type="text" id="comp-strength" placeholder="e.g. 1%" required />
-        </div>
-        <div class="form-group">
-          <label for="comp-qty">Quantity Made</label>
-          <input type="number" id="comp-qty" placeholder="e.g. 30" min="1" required />
-        </div>
-        <div class="form-group">
-          <label for="comp-unit">Unit</label>
-          <select id="comp-unit" required>
-            <option value="">— Select —</option>
-            <option value="g">Grams (g)</option>
-            <option value="mL">Milliliters (mL)</option>
-            <option value="caps">Capsules</option>
-            <option value="tabs">Tablets</option>
-            <option value="units">Units</option>
-          </select>
-        </div>
-        <div class="form-group span-2">
-          <label for="comp-type">Compound Type</label>
-          <select id="comp-type" required>
-            <option value="">— Select —</option>
-            <option value="sterile">Sterile</option>
-            <option value="non-sterile">Non-Sterile</option>
-            <option value="hazardous">Hazardous</option>
-          </select>
-        </div>
-      </div>
 
-      <!-- ── B.U.D. Section ── -->
-      <hr style="border:none; border-top:1px solid var(--border); margin:1.25rem 0;" />
-      <h3 style="margin-bottom:1.1rem; color:var(--primary-dk);">Beyond-Use Date (B.U.D.)</h3>
+        <!-- ── B.U.D. Section ── -->
+        <hr style="border:none; border-top:1px solid var(--border); margin:1.25rem 0;" />
+        <h3 style="margin-bottom:1.1rem; color:var(--primary-dk);">Beyond-Use Date (B.U.D.)</h3>
 
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="comp-date-made">Date Compounded</label>
-          <input type="date" id="comp-date-made" readonly style="background:#ede8df;" required />
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="comp-date-made">Date Compounded</label>
+            <input type="date" id="comp-date-made" readonly style="background:#ede8df;" required />
+          </div>
+          <div class="form-group">
+            <label for="comp-bud">Calculated B.U.D. <span
+                style="font-weight:400;color:var(--muted)">(auto-filled)</span></label>
+            <input type="date" id="comp-bud" readonly />
+          </div>
+          <div class="form-group span-2">
+            <label>
+              <input type="checkbox" id="bud-override" onchange="toggleBudOverride()" />
+              &nbsp;Override B.U.D. — manually set date &amp; expiration
+            </label>
+          </div>
+          <div class="form-group" id="bud-manual-wrap" style="display:none;">
+            <label for="comp-bud-manual">Manual B.U.D.</label>
+            <input type="date" id="comp-bud-manual" />
+          </div>
+          <div class="form-group" id="bud-reason-wrap" style="display:none;">
+            <label for="bud-reason">Override Reason</label>
+            <input type="text" id="bud-reason" placeholder="Reason for manual override" />
+          </div>
         </div>
-        <div class="form-group">
-          <label for="comp-bud">Calculated B.U.D. <span style="font-weight:400;color:var(--muted)">(auto-filled)</span></label>
-          <input type="date" id="comp-bud" readonly />
-        </div>
-        <div class="form-group span-2">
-          <label>
-            <input type="checkbox" id="bud-override" onchange="toggleBudOverride()" />
-            &nbsp;Override B.U.D. — manually set date &amp; expiration
-          </label>
-        </div>
-        <div class="form-group" id="bud-manual-wrap" style="display:none;">
-          <label for="comp-bud-manual">Manual B.U.D.</label>
-          <input type="date" id="comp-bud-manual" />
-        </div>
-        <div class="form-group" id="bud-reason-wrap" style="display:none;">
-          <label for="bud-reason">Override Reason</label>
-          <input type="text" id="bud-reason" placeholder="Reason for manual override" />
-        </div>
-      </div>
 
-      <!-- ── Submit ── -->
-      <hr style="border:none; border-top:1px solid var(--border); margin:1.25rem 0;" />
-      <div style="display:flex; gap:.75rem; justify-content:flex-end;">
-        <a href="inventory.html" class="btn btn-outline">Cancel</a>
-        <button type="submit" class="btn btn-primary">Submit for Approval</button>
-      </div>
+        <!-- ── Submit ── -->
+        <hr style="border:none; border-top:1px solid var(--border); margin:1.25rem 0;" />
+        <div style="display:flex; gap:.75rem; justify-content:flex-end;">
+          <a href="inventory.html" class="btn btn-outline">Cancel</a>
+          <button type="submit" class="btn btn-primary">Submit for Approval</button>
+        </div>
 
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 
-<script src="script.js"></script>
-<script>
-  // Sterile=60 days, Non-Sterile=30 days, Hazardous=7 days
-  const BUD_DEFAULTS = { sterile: 60, 'non-sterile': 30, hazardous: 7 };
+  <script src="script.js"></script>
+  <script>
+    // Sterile=60 days, Non-Sterile=30 days, Hazardous=7 days
+    const BUD_DEFAULTS = { sterile: 60, 'non-sterile': 30, hazardous: 7 };
 
-  document.getElementById('comp-date-made').addEventListener('change', recalcBud);
-  document.getElementById('comp-type').addEventListener('change', recalcBud);
+    document.getElementById('comp-date-made').addEventListener('change', recalcBud);
+    document.getElementById('comp-type').addEventListener('change', recalcBud);
 
-  function recalcBud() {
-    const dateMade = document.getElementById('comp-date-made').value;
-    const type     = document.getElementById('comp-type').value;
-    if (!dateMade || !type) return;
-    const days = BUD_DEFAULTS[type] ?? 30;
-    const bud  = new Date(dateMade);
-    bud.setDate(bud.getDate() + days);
-    document.getElementById('comp-bud').value = bud.toISOString().split('T')[0];
-  }
-
-  function toggleBudOverride() {
-    const on = document.getElementById('bud-override').checked;
-    const dateInput = document.getElementById('comp-date-made');
-    dateInput.readOnly = !on;
-    dateInput.style.background = on ? '#fff' : '#ede8df';
-    document.getElementById('bud-manual-wrap').style.display = on ? '' : 'none';
-    document.getElementById('bud-reason-wrap').style.display = on ? '' : 'none';
-    if (!on) { dateInput.valueAsDate = new Date(); recalcBud(); }
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const override = document.getElementById('bud-override').checked;
-    const payload = {
-      name:               document.getElementById('comp-name').value.trim(),
-      strength:           document.getElementById('comp-strength').value.trim(),
-      type:               document.getElementById('comp-type').value,
-      quantity:           parseInt(document.getElementById('comp-qty').value, 10),
-      unit:               document.getElementById('comp-unit').value,
-      date_made:          document.getElementById('comp-date-made').value,
-      bud:                override
-                            ? document.getElementById('comp-bud-manual').value
-                            : document.getElementById('comp-bud').value,
-      bud_override_reason: override
-                            ? document.getElementById('bud-reason').value.trim()
-                            : null,
-    };
-    try {
-      await apiFetch('/compounds', { method: 'POST', body: JSON.stringify(payload) });
-      window.location.href = 'inventory.html';
-    } catch (err) {
-      showFormAlert(err.message);
+    function recalcBud() {
+      const dateMade = document.getElementById('comp-date-made').value;
+      const type = document.getElementById('comp-type').value;
+      if (!dateMade || !type) return;
+      const days = BUD_DEFAULTS[type] ?? 30;
+      const bud = new Date(dateMade);
+      bud.setDate(bud.getDate() + days);
+      document.getElementById('comp-bud').value = bud.toISOString().split('T')[0];
     }
-  }
 
-  function showFormAlert(msg, type = 'danger') {
-    const el = document.getElementById('form-alert');
-    el.textContent = msg;
-    el.className = `alert alert-${type}`;
-    el.style.display = '';
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+    function toggleBudOverride() {
+      const on = document.getElementById('bud-override').checked;
+      const dateInput = document.getElementById('comp-date-made');
+      dateInput.readOnly = !on;
+      dateInput.style.background = on ? '#fff' : '#ede8df';
+      document.getElementById('bud-manual-wrap').style.display = on ? '' : 'none';
+      document.getElementById('bud-reason-wrap').style.display = on ? '' : 'none';
+      if (!on) { dateInput.valueAsDate = new Date(); recalcBud(); }
+    }
 
-  document.getElementById('comp-date-made').valueAsDate = new Date();
-  recalcBud();
-</script>
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const override = document.getElementById('bud-override').checked;
+      const payload = {
+        name: document.getElementById('comp-name').value.trim(),
+        strength: document.getElementById('comp-strength').value.trim(),
+        type: document.getElementById('comp-type').value,
+        quantity: parseInt(document.getElementById('comp-qty').value, 10),
+        unit: document.getElementById('comp-unit').value,
+        date_made: document.getElementById('comp-date-made').value,
+        bud: override
+          ? document.getElementById('comp-bud-manual').value
+          : document.getElementById('comp-bud').value,
+        bud_override_reason: override
+          ? document.getElementById('bud-reason').value.trim()
+          : null,
+      };
+      try {
+        await apiFetch('/compounds', { method: 'POST', body: JSON.stringify(payload) });
+        window.location.href = 'inventory.html';
+      } catch (err) {
+        showFormAlert(err.message);
+      }
+    }
+
+    function showFormAlert(msg, type = 'danger') {
+      const el = document.getElementById('form-alert');
+      el.textContent = msg;
+      el.className = `alert alert-${type}`;
+      el.style.display = '';
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    document.getElementById('comp-date-made').valueAsDate = new Date();
+    recalcBud();
+  </script>
 
 </body>
+
 </html>

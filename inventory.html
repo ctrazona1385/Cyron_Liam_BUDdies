@@ -1,178 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>B.U.D.DIES. — Inventory</title>
+  <link rel="icon" type="image/png" href="Logo_color.PNG">
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<!-- ── Navbar ── -->
-<nav>
-  <span class="brand">B.U.D.DIES.</span>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="create-compound.html">New Compound</a>
-  <a href="inventory.html" class="active">Inventory</a>
-  <a href="admin-approval.html" class="admin-only" id="nav-admin">Approvals</a>
-  <span class="nav-user" id="nav-user-name"></span>
-  <button class="btn-logout" onclick="logout()">Logout</button>
-</nav>
+  <!-- ── Navbar ── -->
+  <nav>
+    <img class="logo" src="Logo_mono.png">
+    <span class="brand">B.U.D.D.I.E.S.</span>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="create-compound.html">New Compound</a>
+    <a href="inventory.html" class="active">Inventory</a>
+    <a href="admin-approval.html" class="admin-only" id="nav-admin">Approvals</a>
+    <span class="nav-user" id="nav-user-name"></span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </nav>
 
-<div class="page">
+  <div class="page">
 
-  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
-    <h1 class="page-title" style="margin:0;">Inventory Log</h1>
-    <a href="create-compound.html" class="btn btn-primary">+ New Compound</a>
-  </div>
+    <div
+      style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+      <h1 class="page-title" style="margin:0;">Inventory Log</h1>
+      <a href="create-compound.html" class="btn btn-primary">+ New Compound</a>
+    </div>
 
-  <!-- ── Search / Filter bar ── -->
-  <div class="search-bar">
-    <input  type="text"   id="search-name"       placeholder="Search by compound name…"  oninput="applyFilters()" />
-    <input  type="text"   id="search-lot"         placeholder="Search by lot number…"     oninput="applyFilters()" />
-    <input  type="date"   id="filter-exp-from"    title="Expiration from"                 onchange="applyFilters()" />
-    <input  type="date"   id="filter-exp-to"      title="Expiration to"                   onchange="applyFilters()" />
-    <select id="filter-type"   onchange="applyFilters()">
-      <option value="">All Types</option>
-      <option value="sterile">Sterile</option>
-      <option value="non-sterile">Non-Sterile</option>
-      <option value="hazardous">Hazardous</option>
-    </select>
-    <select id="filter-status" onchange="applyFilters()">
-      <option value="">All Statuses</option>
-      <option value="approved">Approved</option>
-      <option value="pending">Pending</option>
-      <option value="expired">Expired</option>
-      <option value="rejected">Rejected</option>
-    </select>
-  </div>
+    <!-- ── Search / Filter bar ── -->
+    <div class="search-bar">
+      <input type="text" id="search-name" placeholder="Search by compound name…" oninput="applyFilters()" />
+      <input type="text" id="search-lot" placeholder="Search by lot number…" oninput="applyFilters()" />
+      <input type="date" id="filter-exp-from" title="Expiration from" onchange="applyFilters()" />
+      <input type="date" id="filter-exp-to" title="Expiration to" onchange="applyFilters()" />
+      <select id="filter-type" onchange="applyFilters()">
+        <option value="">All Types</option>
+        <option value="sterile">Sterile</option>
+        <option value="non-sterile">Non-Sterile</option>
+        <option value="hazardous">Hazardous</option>
+      </select>
+      <select id="filter-status" onchange="applyFilters()">
+        <option value="">All Statuses</option>
+        <option value="approved">Approved</option>
+        <option value="pending">Pending</option>
+        <option value="expired">Expired</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
 
-  <!-- Expiration warnings -->
-  <div class="alert alert-warn" id="exp-warning" style="display:none;">
-    ⚠ <strong id="exp-warning-count"></strong> compound(s) are expiring within 5 days.
-  </div>
+    <!-- Expiration warnings -->
+    <div class="alert alert-warn" id="exp-warning" style="display:none;">
+      ⚠ <strong id="exp-warning-count"></strong> compound(s) are expiring within 5 days.
+    </div>
 
-  <!-- ── Table ── -->
-  <div class="card" style="padding:0; overflow:hidden;">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Compound</th>
-            <th>Form</th>
-            <th>Lot #</th>
-            <th>Type</th>
-            <th>Qty</th>
-            <th>B.U.D.</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="inventory-body">
-        </tbody>
-      </table>
+    <!-- ── Table ── -->
+    <div class="card" style="padding:0; overflow:hidden;">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Compound</th>
+              <th>Form</th>
+              <th>Lot #</th>
+              <th>Type</th>
+              <th>Qty</th>
+              <th>B.U.D.</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p id="no-results" style="display:none; color:var(--muted); font-size:.9rem; margin-top:.75rem;">No compounds match
+      the current filter.</p>
+
+
+  </div><!-- /page -->
+
+  <!-- ── Remove Modal ── -->
+  <div id="remove-modal"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
+    <div class="card" style="width:100%; max-width:400px; margin:0 1rem;">
+      <h3 style="margin-bottom:.25rem; color:var(--danger);">Remove from Inventory</h3>
+      <p id="rm-name" style="font-weight:700; margin-bottom:.25rem;"></p>
+      <p id="rm-stock" style="font-size:.82rem; color:var(--muted); margin-bottom:1rem;"></p>
+      <div class="form-group">
+        <label for="rm-qty">Quantity to Remove</label>
+        <input type="number" id="rm-qty" min="1" step="1" placeholder="e.g. 10" />
+      </div>
+      <div style="display:flex; gap:.75rem; justify-content:flex-end; flex-wrap:wrap; margin-top:.25rem;">
+        <button class="btn btn-outline" onclick="closeRemoveModal()">Cancel</button>
+        <button class="btn btn-warn" onclick="confirmQtyRemove()">Remove Qty</button>
+        <button class="btn btn-danger" onclick="confirmFullRemove()">Remove All</button>
+      </div>
     </div>
   </div>
 
-  <p id="no-results" style="display:none; color:var(--muted); font-size:.9rem; margin-top:.75rem;">No compounds match the current filter.</p>
+  <script src="script.js"></script>
+  <script>
+    // ── Filter logic ──
+    function applyFilters() {
+      const name = document.getElementById('search-name').value.toLowerCase();
+      const lot = document.getElementById('search-lot').value.toLowerCase();
+      const type = document.getElementById('filter-type').value;
+      const status = document.getElementById('filter-status').value;
+      const expFrom = document.getElementById('filter-exp-from').value;
+      const expTo = document.getElementById('filter-exp-to').value;
+      const rows = document.querySelectorAll('#inventory-body tr');
+      let visible = 0;
+      let expiringSoon = 0;
+      const today = new Date();
+      const soon = new Date(); soon.setDate(today.getDate() + 5);
 
+      rows.forEach(row => {
+        const rName = row.dataset.name || '';
+        const rLot = row.dataset.lot || '';
+        const rType = row.dataset.type || '';
+        const rStatus = row.dataset.status || '';
+        const rExp = row.dataset.exp ? new Date(row.dataset.exp) : null;
 
-</div><!-- /page -->
+        const ok =
+          (!name || rName.includes(name)) &&
+          (!lot || rLot.includes(lot)) &&
+          (!type || rType === type) &&
+          (!status || rStatus === status) &&
+          (status !== '' || rStatus !== 'rejected') &&
+          (!expFrom || (rExp && rExp >= new Date(expFrom))) &&
+          (!expTo || (rExp && rExp <= new Date(expTo)));
 
-<!-- ── Remove Modal ── -->
-<div id="remove-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; align-items:center; justify-content:center;">
-  <div class="card" style="width:100%; max-width:400px; margin:0 1rem;">
-    <h3 style="margin-bottom:.25rem; color:var(--danger);">Remove from Inventory</h3>
-    <p id="rm-name" style="font-weight:700; margin-bottom:.25rem;"></p>
-    <p id="rm-stock" style="font-size:.82rem; color:var(--muted); margin-bottom:1rem;"></p>
-    <div class="form-group">
-      <label for="rm-qty">Quantity to Remove</label>
-      <input type="number" id="rm-qty" min="1" step="1" placeholder="e.g. 10" />
-    </div>
-    <div style="display:flex; gap:.75rem; justify-content:flex-end; flex-wrap:wrap; margin-top:.25rem;">
-      <button class="btn btn-outline" onclick="closeRemoveModal()">Cancel</button>
-      <button class="btn btn-warn"    onclick="confirmQtyRemove()">Remove Qty</button>
-      <button class="btn btn-danger"  onclick="confirmFullRemove()">Remove All</button>
-    </div>
-  </div>
-</div>
+        row.style.display = ok ? '' : 'none';
+        if (ok) {
+          visible++;
+          if (rExp && rExp > today && rExp <= soon) expiringSoon++;
+        }
+      });
 
-<script src="script.js"></script>
-<script>
-  // ── Filter logic ──
-  function applyFilters() {
-    const name      = document.getElementById('search-name').value.toLowerCase();
-    const lot       = document.getElementById('search-lot').value.toLowerCase();
-    const type      = document.getElementById('filter-type').value;
-    const status    = document.getElementById('filter-status').value;
-    const expFrom   = document.getElementById('filter-exp-from').value;
-    const expTo     = document.getElementById('filter-exp-to').value;
-    const rows      = document.querySelectorAll('#inventory-body tr');
-    let visible     = 0;
-    let expiringSoon = 0;
-    const today     = new Date();
-    const soon      = new Date(); soon.setDate(today.getDate() + 5);
-
-    rows.forEach(row => {
-      const rName   = row.dataset.name   || '';
-      const rLot    = row.dataset.lot    || '';
-      const rType   = row.dataset.type   || '';
-      const rStatus = row.dataset.status || '';
-      const rExp    = row.dataset.exp    ? new Date(row.dataset.exp) : null;
-
-      const ok =
-        (!name    || rName.includes(name))   &&
-        (!lot     || rLot.includes(lot))     &&
-        (!type    || rType === type)          &&
-        (!status  || rStatus === status)      &&
-        (status !== '' || rStatus !== 'rejected') &&
-        (!expFrom || (rExp && rExp >= new Date(expFrom))) &&
-        (!expTo   || (rExp && rExp <= new Date(expTo)));
-
-      row.style.display = ok ? '' : 'none';
-      if (ok) {
-        visible++;
-        if (rExp && rExp > today && rExp <= soon) expiringSoon++;
+      document.getElementById('no-results').style.display = visible ? 'none' : '';
+      const warn = document.getElementById('exp-warning');
+      if (expiringSoon) {
+        document.getElementById('exp-warning-count').textContent = expiringSoon;
+        warn.style.display = '';
+      } else {
+        warn.style.display = 'none';
       }
-    });
-
-    document.getElementById('no-results').style.display = visible ? 'none' : '';
-    const warn = document.getElementById('exp-warning');
-    if (expiringSoon) {
-      document.getElementById('exp-warning-count').textContent = expiringSoon;
-      warn.style.display = '';
-    } else {
-      warn.style.display = 'none';
     }
-  }
 
-  function doseFormLabel(unit) {
-    return { caps: 'Capsules', tabs: 'Tablets', mL: 'Liquid', g: 'Cream/Topical', units: 'Units' }[unit] || unit;
-  }
+    function doseFormLabel(unit) {
+      return { caps: 'Capsules', tabs: 'Tablets', mL: 'Liquid', g: 'Cream/Topical', units: 'Units' }[unit] || unit;
+    }
 
-  // ── Load inventory from API ──
-  function statusBadgeClass(status, expired) {
-    if (expired) return 'badge-danger';
-    return { approved: 'badge-success', pending: 'badge-pending', rejected: 'badge-danger' }[status] || '';
-  }
+    // ── Load inventory from API ──
+    function statusBadgeClass(status, expired) {
+      if (expired) return 'badge-danger';
+      return { approved: 'badge-success', pending: 'badge-pending', rejected: 'badge-danger' }[status] || '';
+    }
 
-  async function loadInventory() {
-    try {
-      const compounds = await apiFetch('/compounds');
-      const tbody = document.getElementById('inventory-body');
-      tbody.innerHTML = '';
-      compounds.forEach(c => {
-        const expired = new Date(c.bud) < new Date();
-        const rowStatus = expired && c.status === 'approved' ? 'expired' : c.status;
-        const showRemove = c.status === 'approved' || expired;
-        const tr = document.createElement('tr');
-        tr.dataset.name   = `${c.name} ${c.strength}`.toLowerCase();
-        tr.dataset.lot    = c.lot_number.toLowerCase();
-        tr.dataset.type   = c.type;
-        tr.dataset.status = rowStatus;
-        tr.dataset.exp    = c.bud;
-        tr.dataset.id     = c.id;
-        tr.innerHTML = `
+    async function loadInventory() {
+      try {
+        const compounds = await apiFetch('/compounds');
+        const tbody = document.getElementById('inventory-body');
+        tbody.innerHTML = '';
+        compounds.forEach(c => {
+          const expired = new Date(c.bud) < new Date();
+          const rowStatus = expired && c.status === 'approved' ? 'expired' : c.status;
+          const showRemove = c.status === 'approved' || expired;
+          const tr = document.createElement('tr');
+          tr.dataset.name = `${c.name} ${c.strength}`.toLowerCase();
+          tr.dataset.lot = c.lot_number.toLowerCase();
+          tr.dataset.type = c.type;
+          tr.dataset.status = rowStatus;
+          tr.dataset.exp = c.bud;
+          tr.dataset.id = c.id;
+          tr.innerHTML = `
           <td><a href="compound-detail.html?id=${c.id}"><strong>${c.name} ${c.strength}</strong></a></td>
           <td>${doseFormLabel(c.unit)}</td>
           <td>${c.lot_number}</td>
@@ -183,83 +190,84 @@
           <td>
             <button class="btn btn-outline btn-sm" onclick="location.href='compound-detail.html?id=${c.id}'">Details</button>
             ${showRemove ? `<button class="btn btn-danger btn-sm"
-              data-cid="${c.id}" data-cname="${c.name.replace(/"/g,'&quot;')}"
+              data-cid="${c.id}" data-cname="${c.name.replace(/"/g, '&quot;')}"
               data-cqty="${c.quantity}" data-cunit="${c.unit}"
               onclick="openRemoveModal(this)">Remove</button>` : ''}
           </td>`;
-        tbody.appendChild(tr);
-      });
-      applyFilters();
-    } catch (err) {
-      console.error('Failed to load inventory:', err);
-    }
-  }
-
-  loadInventory();
-
-  // ── Remove modal ──
-  let _rid = null, _rmax = null, _runit = null, _rrow = null;
-
-  function openRemoveModal(btn) {
-    _rid   = btn.dataset.cid;
-    _rmax  = parseInt(btn.dataset.cqty, 10);
-    _runit = btn.dataset.cunit;
-    _rrow  = btn.closest('tr');
-    document.getElementById('rm-name').textContent  = btn.dataset.cname;
-    document.getElementById('rm-stock').textContent = `Current stock: ${_rmax} ${_runit}`;
-    const input = document.getElementById('rm-qty');
-    input.value = ''; input.max = _rmax;
-    document.getElementById('remove-modal').style.display = 'flex';
-  }
-  function closeRemoveModal() {
-    document.getElementById('remove-modal').style.display = 'none';
-  }
-  async function confirmQtyRemove() {
-    const qty = parseInt(document.getElementById('rm-qty').value, 10);
-    if (!qty || qty <= 0) { alert('Enter a whole number quantity to remove.'); return; }
-    if (qty > _rmax)      { alert(`Only ${_rmax} ${_runit} in stock.`); return; }
-    try {
-      const result = await apiFetch(`/compounds/${_rid}/quantity`, {
-        method: 'PATCH', body: JSON.stringify({ remove: qty }),
-      });
-      closeRemoveModal();
-      if (result.deleted) {
-        _rrow.remove();
-      } else {
-        _rrow.querySelector('.qty-cell').textContent = `${Math.floor(result.quantity)} ${result.unit}`;
-        const btn = _rrow.querySelector('button[data-cid]');
-        if (btn) btn.dataset.cqty = result.quantity;
+          tbody.appendChild(tr);
+        });
+        applyFilters();
+      } catch (err) {
+        console.error('Failed to load inventory:', err);
       }
-      applyFilters();
-    } catch (err) { alert(err.message); }
-  }
-  async function confirmFullRemove() {
-    if (!confirm('Remove entire compound from inventory? This cannot be undone.')) return;
-    try {
-      await apiFetch(`/compounds/${_rid}`, { method: 'DELETE' });
-      closeRemoveModal();
-      _rrow.remove();
-      applyFilters();
-    } catch (err) { alert(err.message); }
-  }
+    }
 
-  // ── CSV export ──
-  function exportCSV() {
-    const rows    = [...document.querySelectorAll('#inventory-body tr')]
-      .filter(r => r.style.display !== 'none');
-    const headers = ['Compound Name', 'Lot #', 'Type', 'Qty', 'B.U.D.', 'Status'];
-    const lines   = [headers.join(',')];
-    rows.forEach(row => {
-      const cells = [...row.querySelectorAll('td')].slice(0, 6).map(td => `"${td.textContent.trim()}"`);
-      lines.push(cells.join(','));
-    });
-    const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
-    const a    = document.createElement('a');
-    a.href     = URL.createObjectURL(blob);
-    a.download = `bud_inventory_${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
-  }
-</script>
+    loadInventory();
+
+    // ── Remove modal ──
+    let _rid = null, _rmax = null, _runit = null, _rrow = null;
+
+    function openRemoveModal(btn) {
+      _rid = btn.dataset.cid;
+      _rmax = parseInt(btn.dataset.cqty, 10);
+      _runit = btn.dataset.cunit;
+      _rrow = btn.closest('tr');
+      document.getElementById('rm-name').textContent = btn.dataset.cname;
+      document.getElementById('rm-stock').textContent = `Current stock: ${_rmax} ${_runit}`;
+      const input = document.getElementById('rm-qty');
+      input.value = ''; input.max = _rmax;
+      document.getElementById('remove-modal').style.display = 'flex';
+    }
+    function closeRemoveModal() {
+      document.getElementById('remove-modal').style.display = 'none';
+    }
+    async function confirmQtyRemove() {
+      const qty = parseInt(document.getElementById('rm-qty').value, 10);
+      if (!qty || qty <= 0) { alert('Enter a whole number quantity to remove.'); return; }
+      if (qty > _rmax) { alert(`Only ${_rmax} ${_runit} in stock.`); return; }
+      try {
+        const result = await apiFetch(`/compounds/${_rid}/quantity`, {
+          method: 'PATCH', body: JSON.stringify({ remove: qty }),
+        });
+        closeRemoveModal();
+        if (result.deleted) {
+          _rrow.remove();
+        } else {
+          _rrow.querySelector('.qty-cell').textContent = `${Math.floor(result.quantity)} ${result.unit}`;
+          const btn = _rrow.querySelector('button[data-cid]');
+          if (btn) btn.dataset.cqty = result.quantity;
+        }
+        applyFilters();
+      } catch (err) { alert(err.message); }
+    }
+    async function confirmFullRemove() {
+      if (!confirm('Remove entire compound from inventory? This cannot be undone.')) return;
+      try {
+        await apiFetch(`/compounds/${_rid}`, { method: 'DELETE' });
+        closeRemoveModal();
+        _rrow.remove();
+        applyFilters();
+      } catch (err) { alert(err.message); }
+    }
+
+    // ── CSV export ──
+    function exportCSV() {
+      const rows = [...document.querySelectorAll('#inventory-body tr')]
+        .filter(r => r.style.display !== 'none');
+      const headers = ['Compound Name', 'Lot #', 'Type', 'Qty', 'B.U.D.', 'Status'];
+      const lines = [headers.join(',')];
+      rows.forEach(row => {
+        const cells = [...row.querySelectorAll('td')].slice(0, 6).map(td => `"${td.textContent.trim()}"`);
+        lines.push(cells.join(','));
+      });
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `bud_inventory_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+    }
+  </script>
 
 </body>
+
 </html>

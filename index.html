@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>B.U.D.DIES.</title>
+  <link rel="icon" type="image/png" href="Logo_mono.PNG">
+  <title>B.U.D.D.I.E.S.</title>
   <script>
     // Redirect to login if not authenticated, otherwise to dashboard
     const user = sessionStorage.getItem('bud_user');
     window.location.replace(user ? 'dashboard.html' : 'login.html');
   </script>
 </head>
+
 <body>
   <p>Redirecting…</p>
 </body>
+
 </html>

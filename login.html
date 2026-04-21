@@ -1,129 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>B.U.D.DIES. — Login</title>
+  <link rel="icon" type="image/png" href="Logo_color.PNG">
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<div class="login-wrapper">
-  <div class="login-box">
+  <div class="login-wrapper">
+    <div class="login-box">
 
-    <div class="logo">
-      <h1>B.U.D.DIES.</h1>
-      <p>Compounding Pharmacy Management</p>
+      <!-- Logo for BUDDIES -->
+      <div class="logo_pic">
+        <img src="Logo_color.png">
+      </div>
+
+      <div class="logo">
+        <h1>B.U.D.D.I.E.S.</h1>
+        <p>Beyond-Use Date Documentation & Inventory Entry System</p>
+      </div>
+
+      <!-- Tab toggle: Login / Register -->
+      <div class="tab-toggle">
+        <button id="tab-login" class="active" onclick="showTab('login')">Login</button>
+        <button id="tab-register" onclick="showTab('register')">Register</button>
+      </div>
+
+      <!-- Error / success banner -->
+      <div id="auth-alert" style="display:none;" class="alert alert-danger"></div>
+
+      <!-- ── Login Form ── -->
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="you@pharmacy.com" required />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+          Sign In
+        </button>
+      </form>
+
+      <!-- ── Register Form ── -->
+      <form id="register-form" style="display:none;" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label for="reg-name">Full Name</label>
+          <input type="text" id="reg-name" placeholder="Jane Doe" required />
+        </div>
+        <div class="form-group">
+          <label for="reg-email">Email</label>
+          <input type="email" id="reg-email" placeholder="you@pharmacy.com" required />
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" placeholder="Min. 8 characters" minlength="8" required />
+        </div>
+        <div class="form-group">
+          <label for="reg-role">Role</label>
+          <select id="reg-role" required>
+            <option value="">— Select Role —</option>
+            <option value="technician">Technician</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+          Create Account
+        </button>
+      </form>
+
     </div>
-
-    <!-- Tab toggle: Login / Register -->
-    <div class="tab-toggle">
-      <button id="tab-login"    class="active" onclick="showTab('login')">Login</button>
-      <button id="tab-register"              onclick="showTab('register')">Register</button>
-    </div>
-
-    <!-- Error / success banner -->
-    <div id="auth-alert" style="display:none;" class="alert alert-danger"></div>
-
-    <!-- ── Login Form ── -->
-    <form id="login-form" onsubmit="handleLogin(event)">
-      <div class="form-group">
-        <label for="login-email">Email</label>
-        <input type="email" id="login-email" placeholder="you@pharmacy.com" required />
-      </div>
-      <div class="form-group">
-        <label for="login-password">Password</label>
-        <input type="password" id="login-password" placeholder="••••••••" required />
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
-        Sign In
-      </button>
-    </form>
-
-    <!-- ── Register Form ── -->
-    <form id="register-form" style="display:none;" onsubmit="handleRegister(event)">
-      <div class="form-group">
-        <label for="reg-name">Full Name</label>
-        <input type="text" id="reg-name" placeholder="Jane Doe" required />
-      </div>
-      <div class="form-group">
-        <label for="reg-email">Email</label>
-        <input type="email" id="reg-email" placeholder="you@pharmacy.com" required />
-      </div>
-      <div class="form-group">
-        <label for="reg-password">Password</label>
-        <input type="password" id="reg-password" placeholder="Min. 8 characters" minlength="8" required />
-      </div>
-      <div class="form-group">
-        <label for="reg-role">Role</label>
-        <select id="reg-role" required>
-          <option value="">— Select Role —</option>
-          <option value="technician">Technician</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
-        Create Account
-      </button>
-    </form>
-
   </div>
-</div>
 
-<script src="script.js"></script>
-<script>
-  function showTab(tab) {
-    document.getElementById('login-form').style.display    = tab === 'login'    ? '' : 'none';
-    document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
-    document.getElementById('tab-login').classList.toggle('active',    tab === 'login');
-    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
-    hideAlert();
-  }
-
-  function showAlert(msg, type = 'danger') {
-    const el = document.getElementById('auth-alert');
-    el.textContent = msg;
-    el.className = `alert alert-${type}`;
-    el.style.display = '';
-  }
-  function hideAlert() { document.getElementById('auth-alert').style.display = 'none'; }
-
-  async function handleLogin(e) {
-    e.preventDefault();
-    hideAlert();
-    const email    = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value;
-    try {
-      const user = await apiFetch('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-      });
-      sessionStorage.setItem('bud_user', JSON.stringify(user));
-      window.location.replace('dashboard.html');
-    } catch (err) {
-      showAlert(err.message);
+  <script src="script.js"></script>
+  <script>
+    function showTab(tab) {
+      document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
+      document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+      hideAlert();
     }
-  }
 
-  async function handleRegister(e) {
-    e.preventDefault();
-    hideAlert();
-    const name     = document.getElementById('reg-name').value.trim();
-    const email    = document.getElementById('reg-email').value.trim();
-    const password = document.getElementById('reg-password').value;
-    const role     = document.getElementById('reg-role').value;
-    try {
-      await apiFetch('/auth/register', {
-        method: 'POST',
-        body: JSON.stringify({ name, email, password, role }),
-      });
-      showAlert('Account created! You can now log in.', 'success');
-      showTab('login');
-    } catch (err) {
-      showAlert(err.message);
+    function showAlert(msg, type = 'danger') {
+      const el = document.getElementById('auth-alert');
+      el.textContent = msg;
+      el.className = `alert alert-${type}`;
+      el.style.display = '';
     }
-  }
-</script>
+    function hideAlert() { document.getElementById('auth-alert').style.display = 'none'; }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      hideAlert();
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      try {
+        const user = await apiFetch('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+        });
+        sessionStorage.setItem('bud_user', JSON.stringify(user));
+        window.location.replace('dashboard.html');
+      } catch (err) {
+        showAlert(err.message);
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      hideAlert();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const role = document.getElementById('reg-role').value;
+      try {
+        await apiFetch('/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({ name, email, password, role }),
+        });
+        showAlert('Account created! You can now log in.', 'success');
+        showTab('login');
+      } catch (err) {
+        showAlert(err.message);
+      }
+    }
+  </script>
 
 </body>
+
 </html>
