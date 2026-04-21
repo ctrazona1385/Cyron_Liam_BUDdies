@@ -67,9 +67,9 @@ function initNav() {
  * @returns {string}
  */
 function calcBUD(startDate, days) {
-  const d = new Date(startDate);
+  const d = new Date(startDate + 'T00:00:00');
   d.setDate(d.getDate() + days);
-  return d.toISOString().split('T')[0];
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
 /**
@@ -79,7 +79,7 @@ function calcBUD(startDate, days) {
  * @returns {number}
  */
 function daysUntil(targetDate) {
-  return Math.ceil((new Date(targetDate) - Date.now()) / 86_400_000);
+  return Math.ceil((new Date(targetDate + 'T00:00:00') - Date.now()) / 86_400_000);
 }
 
 /**
