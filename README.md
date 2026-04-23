@@ -1,6 +1,10 @@
-# B.U.D.DIES. — README
+**CSC 4370 — Web Programming** | Spring 2026
+**Team:** Cyron Trazona & Liam Finn
 
-> **Beyond-Use Date Documentation & Inventory Entry System**
+---
+
+# B.U.D.DIES. — Beyond-Use Date Documentation & Inventory Entry System
+
 > Compounding pharmacy management for tracking compounds from creation through approval, inventory, and expiration.
 
 ---
@@ -20,8 +24,8 @@
 
 **Database**
 - PostgreSQL
-- Tables: `users`, `compounds`, `activity_log`
-- `ON DELETE CASCADE` on `activity_log → compounds`
+- Tables: `users`, `compounds`, `ingredients`, `activity_log`
+- `ON DELETE CASCADE` on `ingredients → compounds` and `activity_log → compounds`
 
 ---
 
@@ -36,7 +40,7 @@ Real login credentials seeded in the database:
 
 ---
 
-## Dev Access — Bypassing Login
+## Grader Access — Quick Login Bypass
 
 The backend uses JWT auth. For local testing without real credentials, inject a session directly via the browser console on any page:
 
@@ -65,29 +69,6 @@ window.location.replace('dashboard.html');
 ```
 
 To log out: click Logout in the navbar, or run `sessionStorage.removeItem('bud_user')` in the console.
-
----
-
-## Sharing via Zip (Slack, etc.)
-
-Zipping and sending the folder works — standard zip tools are not git-aware, so the `.env` file **will** be included. The recipient will get the DB credentials and JWT secret.
-
-However, the **database itself is not in the zip**. The recipient still needs to:
-
-1. Install **Node.js** and **PostgreSQL** if not already installed
-2. Create a database, then run the migration:
-   ```bash
-   psql -d their_db_name -f server/db/migrate.sql
-   ```
-3. Edit `server/.env` to match their own PostgreSQL credentials (DB name, user, password)
-4. Start the server:
-   ```bash
-   cd server
-   node index.js
-   ```
-5. Serve or open the frontend from the repo root
-
-`node_modules` is included in the zip so `npm install` is not required.
 
 ---
 
